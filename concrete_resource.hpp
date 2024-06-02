@@ -1,7 +1,7 @@
 #pragma
 
 #include "resource.hpp"
-
+namespace ariel{
 class Wood : public Resource {
 public:
     std::string getType() const override { return "Wood"; }
@@ -32,3 +32,4 @@ public:
     std::string getType() const override { return "None"; }
 };
 
+}

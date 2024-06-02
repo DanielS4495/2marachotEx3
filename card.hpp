@@ -5,7 +5,6 @@
 #include "development_card.hpp"
 namespace ariel
 {
-
     class Card
     {
     public:
@@ -13,5 +12,4 @@ namespace ariel
         virtual std::string getType() const = 0;
         virtual void play() = 0;
     };
-
 }

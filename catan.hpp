@@ -20,33 +20,22 @@ namespace ariel
         std::vector<std::shared_ptr<Tile>> tiles;
         std::vector<std::shared_ptr<Settlement>> settlements;
         std::vector<std::shared_ptr<Road>> roads;
+        void chooseStartingPlayer();
 
         Catan();
         void initializeBoard();
 
     public:
-        static Catan &getInstance(const std::vector<Player> &players)
-        {
-            static Catan instance;
-            instance.players = players;
-            instance.currentPlayerIndex = 0;
-            instance.currentPlayer = &instance.players[0];
-            instance.initializeBoard();
-            return instance;
-        }
-
-        Player *getCurrentPlayer()
-        {
-            return currentPlayer;
-        }
-
+        static Catan &getInstance(const std::vector<Player> &players);
+        Player *getCurrentPlayer();
         void start();
         void playTurn();
         void nextPlayer();
         bool checkVictory();
-        void chooseStartingPlayer();
+        
         void printWinner();
-        void rollDice();
+        void rollDice(); //do i need this? player has it
+        
         // Other member functions
     };
 
