@@ -50,7 +50,8 @@ namespace ariel
     }
     // when i use road i need to sent to catan so it will check with all the player who has the most
     void Player::pieceBuild(const std::string &getPiece, const std::vector<std::string> &places, const std::vector<int> &placesNum, Board &board)
-    {
+    { //need to do while so i can try to put city in someplace and get true or false if false try someplace else or if there is no place at all to put
+    //need func to do that
     }
 
     void Player::rollDice()

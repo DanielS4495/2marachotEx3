@@ -8,7 +8,7 @@ namespace ariel
     {
     public:
         std::string getType() const override { return "Knight"; }
-        void play() override
+        void play() override 
         {
         }
     };

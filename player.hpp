@@ -24,7 +24,7 @@ namespace ariel
         std::vector<std::shared_ptr<Road>> roads;
         std::vector<std::shared_ptr<Resource>> resource;
         std::vector<std::shared_ptr<Development>> Development;
-        
+        void reducevictorypoints();
         // Other player attributes like resources and development cards
 
     public:
@@ -37,7 +37,7 @@ namespace ariel
         void removeResource(const std::string &removeResource); // maybe need to be private
         void addDevelopment(const std::string &getDevelopment);
         void useDevelopment(const std::string &removeDevelopment);
-        void pieceBuild(const std::string &getPiece);
+        void pieceBuild(const std::string &getPiece,const std::vector<std::string>& places, const std::vector<int>& placesNum, Board& board);
         // void placeSettlement(const std::vector<std::string>& places, const std::vector<int>& placesNum, Board& board);
         // void placeRoad(const std::vector<std::string>& places, const std::vector<int>& placesNum, Board& board);
         void rollDice();
@@ -47,8 +47,8 @@ namespace ariel
         int getNumberOfSettlement() const;
         int getNumberOfCity() const;
         int getNumberOfRoads() const;
-        void setknightCard();
-        void setroadCard();
+        void setknightCard(bool b); //to add do true else false
+        void setroadCard(bool b); //to add do true else false
         void printPoints() const;
     };
 }

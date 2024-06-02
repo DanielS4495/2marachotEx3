@@ -38,7 +38,7 @@ namespace ariel
 
         // Move to the next player
         // turnIndex = (turnIndex + 1) % players.size(); //do i need this?
-        nextPlayer();
+        // nextPlayer(); //i need to do first end turn
     }
 
     void Catan::nextPlayer()
@@ -84,7 +84,7 @@ namespace ariel
         std::cout << "None of the players reached 10 points yet." << std::endl;
     }
 
-    void Catan::rollDice()
+    void Catan::rollDice() //what happend if its 7 ?
     {
         // Logic to roll the dice and distribute resources
         int diceRoll = rand() % 6 + 1 + rand() % 6 + 1; // Simulate rolling two six-sided dice
