@@ -13,26 +13,26 @@ using namespace ariel;
 
 int main()
 {
-    Player p1("Amit");
-    Player p2("Yossi");
-    Player p3("Dana");
+    Player p1("Amit",9);
+    Player p2("Yossi",6);
+    Player p3("Dana",3);
     Catan catan(p1, p2, p3);
     // Starting of the game. Every player places two settlements and two roads.
-    catan.ChooseStartingPlayer();   // should print the name of the starting player, assume it is Amit.
+    catan.chooseStartingPlayer();   // should print the name of the starting player, assume it is Amit.
     Board board = catan.getBoard(); // get the board of the game.
     vector<string> places = {"Forest", "Hills"};
     vector<int> placesNum = {5, 6};
     p1.placeSettelemnt(places, placesNum, board);
-    p1.placeRoad(places, placesNum, board);
+    p1.placeRoad(places, placesNum);
     vector<string> places = {"Agricultural Land", "Desert"};
     vector<int> placesNum = {3, 4};
     p1.placeSettelemnt(places, placesNum, board);
-    p1.placeRoad(places, placesNum, board); // p1 chooses Forest, hills, Agricultural Land, Desert with numbers 5, 6, 3, 4.
+    p1.placeRoad(places, placesNum); // p1 chooses Forest, hills, Agricultural Land, Desert with numbers 5, 6, 3, 4.
 
     vector<string> places = {"Mountains", "Pasture Land"};
     vector<int> placesNum = {4, 9};
     p2.placeSettelemnt(places, placesNum, board);
-    p2.placeRoad(places, placesNum, board);
+    p2.placeRoad(places, placesNum);
     try
     {
         p3.placeSettelemnt(places, placesNum, board); // p3 tries to place a settlement in the same location as p2.
@@ -43,21 +43,21 @@ int main()
     }
     vector<string> places = {"Forest", "Pasture Land"};
     vector<int> placesNum = {5, 9};
-    p2.placeSettelemnt(places, placesNum, board);
+    p2.placeSettelemnt(places, placesNum);
     p2.placeRoad(places, placesNum, board); // p2 chooses Mountains, Pasture Land, and Forest with numbers 4, 9, 5.
 
     vector<string> places = {"Mountains", "Pasture Land"};
     vector<int> placesNum = {3, 8};
-    p3.placeSettelemnt(places, placesNum, board);
+    p3.placeSettelemnt(places, placesNum);
     p3.placeRoad(places, placesNum, board);
     vector<string> places = {"Agricultural Land", "Pasture Land"};
     vector<int> placesNum = {3, 9};
-    p3.placeSettelemnt(places, placesNum, board);
+    p3.placeSettelemnt(places, placesNum);
     p3.placeRoad(places, placesNum, board); // p3 chooses Mountains, Pasture Land, Agricultural Land, Pasture Land with numbers 3, 8, 3, 9.
 
     // p1 has wood,bricks, and wheat, p2 has wood, ore, and wool, p3 has ore, wool, wheat.
     p1.rollDice();                                    // Lets say it's print 4. Then, p2 gets ore from the mountations.
-    p1.placeRoad({"Forest", "Hills"}, {5, 6}, board); // p1 continues to build a road.
+    p1.placeRoad({"Forest", "Hills"}, {5, 6}); // p1 continues to build a road.
     p1.endTurn();                                     // p1 ends his turn.
 
     p2.rollDice(); // Lets say it's print 9. Then, p3 gets wool from the Pasture Land, p2 gets wool from the Pasture Land.

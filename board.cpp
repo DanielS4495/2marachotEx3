@@ -1,4 +1,5 @@
 #pragma
+#include <stdexcept>
 
 #include "board.hpp"
 namespace ariel
@@ -54,6 +55,11 @@ namespace ariel
             {18, {14, 15, 17, 19}},
             {19, {15, 16, 18}}};
     }
+    static std::shared_ptr<Board> getInstance()
+    {
+        static std::shared_ptr<Board> instance(new Board());
+        return instance;
+    }
     bool Board::areAdjacent(int node1, int node2)
     {
         for (const auto &adjNode : adjList[node1])
@@ -66,7 +72,7 @@ namespace ariel
         return false;
     }
 
-    bool Board::placeSettlement(int node)
+    bool Board::placeSettlement(int node, const Player &player)
     {
         // Ensure the placement is valid
         if (settlements.find(node) != settlements.end())
@@ -86,7 +92,27 @@ namespace ariel
         settlements[node] = std::make_shared<Settlement>(node);
         return true;
     }
-    bool Board::placeRoad(int node1, int node2)
+    bool Board::placeCity(int node, const Player &player)
+    {
+        std::shared_ptr<Piece> piece = getPieceAtNode(node);
+
+        // Check if the piece at the node is a Settlement and belongs to the player
+        if (piece && piece->getType() == "settlement" && piece->getPlayer().getName() == player.getName())
+        {
+            // Remove the settlement
+            removePieceAtNode(node);
+
+            // Place the city
+            std::shared_ptr<Piece> city = std::make_shared<City>(player);
+            placePieceAtNode(node, city);
+
+            return true;
+        }
+
+        // No settlement of the same player at the node
+        return false;
+    }
+    bool Board::placeRoad(int node1, int node2, const Player &player)
     {
         // Ensure the placement is valid
         if (!areAdjacent(node1, node2) || roads.find(node1) != roads.end() || roads.find(node2) != roads.end())
@@ -101,6 +127,11 @@ namespace ariel
         return true;
     }
 
+    std::shared_ptr<Piece> Board::getPieceAtNode(int node)
+    {
+        return std::shared_ptr<Piece>();
+    }
+
     // std::shared_ptr<Tile> getTile(int node)
     // {
     //     if (tiles.find(node) != tiles.end())
@@ -109,6 +140,14 @@ namespace ariel
     //     }
     //     return nullptr;
     // }
+
+    void Board::removePieceAtNode(int node)
+    {
+    }
+
+    void Board::placePieceAtNode(int node, std::shared_ptr<Piece> piece)
+    {
+    }
 
     void Board::printBoard() const
     {

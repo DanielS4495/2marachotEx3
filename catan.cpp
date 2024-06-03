@@ -1,22 +1,28 @@
 #include "catan.hpp"
 namespace ariel
 {
-    Catan::Catan() {}
-
-    void Catan::initializeBoard()
+    Catan::Catan(const std::vector<Player> &players)
     {
-        // Initialize the tiles and other board elements
+        Board board = Board::getInstance();
+        catan.getInstance(players);
     }
-    static Catan &getInstance(const std::vector<Player> &players)
+
+    void Catan::getBoard()
     {
+        return board;
+    }
+    static Catan Catan::&getInstance(const std::vector<Player> &players)
+    {
+        // static Catan instance(players);
+        // board = Board::getInstance();
         static Catan instance;
         instance.players = players;
         instance.currentPlayerIndex = 0;
-        instance.chooseStartingPlayer();
-        instance.initializeBoard();
+        // instance.chooseStartingPlayer();
+        instance.getBoard();
         return instance;
     }
-    Player *getCurrentPlayer()
+    Player Catan::*getCurrentPlayer()
     {
         return currentPlayer;
     }
@@ -36,6 +42,8 @@ namespace ariel
         // Distribute resources based on the roll result
         // Implement trading and building logic
 
+        setIfBuild(true); // when the player build he cant trade
+
         // Move to the next player
         // turnIndex = (turnIndex + 1) % players.size(); //do i need this?
         // nextPlayer(); //i need to do first end turn
@@ -50,6 +58,10 @@ namespace ariel
     bool Catan::checkVictory()
     {
         return currentPlayer->getVictoryPoints() >= 10;
+    }
+    bool Catan::checkBuild()
+    {
+        return ifBuild;
     }
 
     void Catan::chooseStartingPlayer()
@@ -71,6 +83,11 @@ namespace ariel
         }
     }
 
+    void Catan::setIfBuild(bool b)
+    {
+        ifBuild = b;
+    }
+
     void Catan::printWinner()
     { // need to free all the space from everything
         for (const auto &player : players)
@@ -84,7 +101,7 @@ namespace ariel
         std::cout << "None of the players reached 10 points yet." << std::endl;
     }
 
-    void Catan::rollDice() //what happend if its 7 ?
+    void Catan::rollDice() // what happend if its 7 ?
     {
         // Logic to roll the dice and distribute resources
         int diceRoll = rand() % 6 + 1 + rand() % 6 + 1; // Simulate rolling two six-sided dice

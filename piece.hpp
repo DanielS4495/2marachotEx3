@@ -1,4 +1,9 @@
-#include <string> // Add this include for string usage
+#pragma once
+#include <string>
+namespace ariel
+{
+    class Player;
+}
 namespace ariel
 {
     enum PieceType
@@ -11,60 +16,56 @@ namespace ariel
     class Piece
     {
     public:
-        virtual Player getType() const = 0; // Pure virtual function to get the piece type
-        virtual PieceType getPlayer() const = 0;
-        virtual ~Piece() {} // Virtual destructor to allow proper cleanup of derived classes
+        virtual std::string getType() const = 0;
+        virtual const Player &getPlayer() const = 0;
+        virtual ~Piece() {}
     };
 
     class Road : public Piece
     {
-        private::std::string player;
+    private:
+        Player player;
 
     public:
-        Road(const std::string &player) const override
+        Road(const Player &player) : player(player) {}
+
+        virtual const Player &getPlayer() const override
         {
-            *this->player = player;
+            return player;
         }
-        virtual PieceType getType() const override { return ROAD_PIECE; }
+
+        virtual std::string getType() const override { return "road"; }
     };
 
     class Settlement : public Piece
     {
-        private::std::string player;
+    private:
+        Player player;
 
     public:
-        virtual PieceType getPlayer() const override
+        Settlement(const Player &player) : player(player) {}
+
+        virtual const Player &getPlayer() const override
         {
             return player;
         }
-        Settlement(const std::string &player)
-        {
-            *this->player = player;
-        }
 
-        virtual PieceType getType() const override
-        {
-            return SETTLEMENT_PIECE;
-        }
+        virtual std::string getType() const override { return "settlement"; }
     };
 
     class City : public Piece
     {
     private:
-        std::string player;
+        Player player;
 
     public:
-        City(const std::string &player)
-        {
-            *this->player = player;
-        }
-        virtual PieceType getPlayer() const override
+        City(const Player &player) : player(player) {}
+
+        virtual const Player &getPlayer() const override
         {
             return player;
         }
-        virtual PieceType getType() const override
-        {
-            return CITY_PIECE;
-        }
+
+        virtual std::string getType() const override { return "city"; }
     };
 }
