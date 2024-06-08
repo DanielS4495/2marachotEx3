@@ -4,48 +4,48 @@
 #include <memory>
 #include <string>
 #include <iostream>
-
-// #include "board.hpp"
-// #include "tile.hpp"
-// #include "piece.hpp"
-namespace ariel {
-    class Player;
-    class Piece;
-    class Tile;
-    class Board;
-}
+#include "player.hpp"
+#include "board.hpp"
+#include "tile.hpp"
+#include "piece.hpp"
+using namespace std;
 namespace ariel
 {
     class Catan
     {
     private:
         std::vector<Player> players;
+        // Board &board;
         std::shared_ptr<Board> board;
         Player *currentPlayer;
-        int currentPlayerIndex;
+        size_t currentPlayerIndex;
         bool ifBuild;
         std::vector<std::shared_ptr<Tile>> tiles;
         std::vector<std::shared_ptr<Piece>> settlements;
         std::vector<std::shared_ptr<Piece>> roads;
-        
-        void setIfBuild();
-        
-        Catan(const std::vector<Player> &players);
+        // std::shared_ptr<Board> board;
+        void setIfBuild(bool status);
+
+        // Catan(const std::vector<Player> &players);
         // void initializeBoard();
 
     public:
+        Catan(const std::vector<Player> &players);
+        Catan(const Catan &) = delete;
+        void operator=(const Catan &) = delete;
+        // std::shared_ptr<Board> getBoard() const;
         static Catan &getInstance(const std::vector<Player> &players);
-        Player *getCurrentPlayer();
+        Board &getBoard();
+        Player* getCurrentPlayer() const;
         void chooseStartingPlayer();
-        void getBoard();
         void start();
-        void playTurn();
+        void playTurn();    
         void nextPlayer();
         bool checkVictory();
-        bool checkBuild(); //check if the player build something so he cant trade 
+        bool checkBuild(); // check if the player build something so he cant trade
         void printWinner();
-        void rollDice(); //do i need this? player has it
-        
+        int rollDice(); // do i need this? player has it
+
         // Other member functions
     };
 

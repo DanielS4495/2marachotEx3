@@ -1,4 +1,6 @@
 #include "player.hpp"
+#include "board.hpp"
+// #include "catan.hpp"
 using namespace std;
 namespace ariel
 {
@@ -16,14 +18,15 @@ namespace ariel
         this->victoryPoints = 0;
         this->roadCard = false;
         this->knightCard = false;
-        for (const auto &pair : stringToResource)
-        {
-            this->resources[pair.second] = 0;
-        }
-        for (const auto &pair : Development::stringToDevelopment)
-        {
-            this->development[pair.second] = 0;
-        }
+        
+        // for (const auto &pair : stringToResource)
+        // {
+        //     this->resources[pair.second] = 0;
+        // }
+        // for (const auto &pair : Card::stringToDevelopment)
+        // {
+        //     this->development[pair.second] = 0;
+        // }
     }
     std::string Player::getName() const
     {
@@ -44,21 +47,23 @@ namespace ariel
     void Player::addResource(const std::string &getResource) // how does it know what type its a string not type resource
     {
         ResourceType resourceType = getResourceTypeFromString(getResource);
-        std::shared_ptr<Resource> res = createResource(ResourceType);
+        std::shared_ptr<Resource> res = createResource(resourceType);
         resources[res]++;
     }
     void Player::removeResource(const std::string &removeResource)
     {
         ResourceType resourceType = getResourceTypeFromString(removeResource);
-        std::shared_ptr<Resource> res = createResource(ResourceType);
+        std::shared_ptr<Resource> res = createResource(resourceType);
         if (resources[res] > 0)
             resources[res]--;
         else
             throw std::invalid_argument("Invalid dont have enough resource type");
     }
-    int Player::getResourceCount(ResourceType resourceType) const
+    int Player::getResourceCount(const std::string &getResource) const
     {
-        auto it = resources.find(resourceType);
+        ResourceType resourceType = getResourceTypeFromString(getResource);
+        std::shared_ptr<Resource> res = createResource(resourceType);
+        auto it = resources.find(res);
         if (it != resources.end())
         {
             return it->second;
@@ -71,7 +76,7 @@ namespace ariel
     void Player::addDevelopment(const std::string &getDevelopment)
     {
         CardType developmentType = getCardTypeFromString(getDevelopment);
-        std::shared_ptr<Card> card = createCard(developmentType, *this);
+        std::shared_ptr<Card> card = createCard(developmentType);
         development[card]++;
     }
 
@@ -80,7 +85,7 @@ namespace ariel
     void Player::useDevelopment(const std::string &removeDevelopment)
     {
         CardType developmentType = getCardTypeFromString(removeDevelopment);
-        std::shared_ptr<Card> card = createCard(developmentType, *this);
+        std::shared_ptr<Card> card = createCard(developmentType);
         if (development[card] > 0)
             development[card]--;
         else
@@ -88,16 +93,18 @@ namespace ariel
         try
         {
             // std::shared_ptr<Card> card = createCard(developmentType);
-            card->play(player);
+            // card->play(player);
         }
         catch (const std::invalid_argument &e)
         {
             std::cerr << e.what() << std::endl;
         }
     }
-    int Player::getDevelopmentCardCount(CardType type) const
+    int Player::getDevelopmentCardCount(const string &getDevelopment) const
     {
-        auto it = development.find(type);
+        CardType developmentType = getCardTypeFromString(getDevelopment);
+        std::shared_ptr<Card> card = createCard(developmentType);
+        auto it = development.find(card);
         if (it != development.end())
         {
             return it->second;
@@ -127,15 +134,43 @@ namespace ariel
     void Player::buyDevelopmentCard()
     {
     }
-    void Player::placeSettlement(const std::vector<std::string> &places, const std::vector<int> &placesNum)
-    {
-        board.placeSettlement(places, placesNum);
+    void Player::placeSettelemnt(const std::vector<std::string> &places, const std::vector<int> &placesNum)
+    { // check if there are enough resource to build
+        if (getResourceCount("WOOD") > 0 && getResourceCount("SHEEP") > 0 && getResourceCount("WHEAT") > 0 && getResourceCount("ORE") > 0 && getNumberOfSettlement() < 5)
+        // board.placeSettlement(places, placesNum);
+        {
+            removeResource("WOOD");
+            removeResource("SHEEP");
+            removeResource("WHEAT");
+            removeResource("ORE");
+        }
+        else
+            throw std::invalid_argument("Invalid dont have enough resource type or dont have enough settelemnt to build");
     }
     void Player::placeCity(const std::vector<std::string> &places, const std::vector<int> &placesNum)
     {
+        if (getResourceCount("BRICK") > 3 && getResourceCount("WHEAT") > 2 && getNumberOfCity() < 4)
+        // board.placeSettlement(places, placesNum);
+        {
+            removeResource("WHEAT");
+            removeResource("WHEAT");
+            removeResource("BRICK");
+            removeResource("BRICK");
+            removeResource("BRICK");
+        }
+        else
+            throw std::invalid_argument("Invalid dont have enough resource type or dont have enough city to build");
     }
     void Player::placeRoad(const std::vector<std::string> &places, const std::vector<int> &placesNum)
     {
+        if (getResourceCount("WOOD") > 0 && getResourceCount("ORE") > 0 && getNumberOfRoads() < 15)
+        // board.placeroad(placesNum[0],placesNum[1],this);
+        {
+            removeResource("WOOD");
+            removeResource("ORE");
+        }
+        else
+            throw std::invalid_argument("Invalid dont have enough resource type or dont have enough roads to build");
     }
     int Player::getNumberOfSettlement() const
     {
@@ -187,4 +222,13 @@ namespace ariel
     {
         cout << "Player: " << this->getName() << "has " << this->getVictoryPoints() << endl;
     }
+    bool Player::operator==(const Player &p) const
+    {
+        if (p.getName() != this->getName())
+            return false;
+        if (p.getAge() != this->getAge())
+            return false;
+        return true;
+    }
+
 }

@@ -1,30 +1,56 @@
 #include "catan.hpp"
 namespace ariel
 {
-    Catan::Catan(const std::vector<Player> &players)
+    // Board &board;
+    // Catan::Catan(const std::vector<Player> &players)
+    //     : players(players), currentPlayerIndex(0), ifBuild(false), board(*(Board::getInstance()))
+    // {
+    //     chooseStartingPlayer(); // Assuming this is a member function
+    // }
+    // Catan::Catan(const std::vector<Player> &players)
+    //     : players(players), currentPlayerIndex(0), ifBuild(false) {
+    //     board = Board::getInstance();
+    //     chooseStartingPlayer();
+    // }
+
+    // // Board &Catan::getBoard()
+    // // {
+    // //     return board;
+    // // }
+
+    // std::shared_ptr<Board> Catan::getBoard() const {
+    //     return board;
+    // }
+    Catan::Catan(const std::vector<Player> &players) : players(players), currentPlayerIndex(0), ifBuild(false), board(nullptr)
     {
-        Board board = Board::getInstance();
-        catan.getInstance(players);
+        chooseStartingPlayer(); // Assuming this doesn't call getBoard
     }
 
-    void Catan::getBoard()
+    Board &Catan::getBoard()
     {
-        return board;
+        if (!board)
+        {
+            board = std::make_shared<Board>();
+        }
+        return *board;
     }
-    static Catan Catan::&getInstance(const std::vector<Player> &players)
+    Catan &Catan::getInstance(const std::vector<Player> &players)
     {
-        // static Catan instance(players);
-        // board = Board::getInstance();
-        static Catan instance;
-        instance.players = players;
-        instance.currentPlayerIndex = 0;
-        // instance.chooseStartingPlayer();
-        instance.getBoard();
+        // // static Catan instance(players);
+        // // board = Board::getInstance();
+        // static Catan instance;
+        // instance.players = players;
+        // instance.currentPlayerIndex = 0;
+        // // instance.chooseStartingPlayer();
+        // instance.getBoard();
+        // return instance;
+        // board =*(Board::getInstance());
+        static Catan instance(players);
         return instance;
     }
-    Player Catan::*getCurrentPlayer()
+    Player *Catan::getCurrentPlayer() const
     {
-        return currentPlayer;
+        return this->currentPlayer;
     }
     void Catan::start()
     {
@@ -36,8 +62,18 @@ namespace ariel
         // Player *currentPlayer = getCurrentPlayer();
         std::cout << currentPlayer->getName() << "'s turn." << std::endl;
 
-        int rollResult = Dice::roll();
+        int rollResult = rollDice();
         std::cout << "Rolled: " << rollResult << std::endl;
+
+        // string resource="";
+        // for (const auto &player : players){ //go over all player
+        //     bool robber(Tile::hasRobber()); //check if there is robber
+        //     if(!robber){
+        //     resource = Tile::getResource.(); //get name resource
+        //      check if there is a piece right next to the resource
+        //     player.addResource(resource); //give player serource
+        //     }
+        // }
 
         // Distribute resources based on the roll result
         // Implement trading and building logic
@@ -51,6 +87,8 @@ namespace ariel
 
     void Catan::nextPlayer()
     {
+        // currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        // currentPlayer = &players[currentPlayerIndex];
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         currentPlayer = &players[currentPlayerIndex];
     }
@@ -63,24 +101,23 @@ namespace ariel
     {
         return ifBuild;
     }
-
     void Catan::chooseStartingPlayer()
-    { // the oldest player is starting
-        int maxage = 0;
-        for (const auto &player : players)
+    {
+        // Find oldest player
+        int maxAge = 0;
+        size_t oldestPlayerIndex = 0; // Initialize index to avoid potential issues
+
+        for (size_t i = 0; i < players.size(); ++i)
         {
-            if (maxage < player.getage())
-                maxage = player.getage();
-        }
-        for (const auto &player : players)
-        {
-            if (maxage == player.getage())
+            if (maxAge < players[i].getAge())
             {
-                std::cout << "Starting player is " << player->getName() << std::endl;
-                *this->currentPlayer == player;
-                return;
+                maxAge = players[i].getAge();
+                oldestPlayerIndex = i;
             }
         }
+
+        std::cout << "Starting player is " << players[oldestPlayerIndex].getName() << std::endl;
+        currentPlayerIndex = oldestPlayerIndex; // Assign the index of the oldest player
     }
 
     void Catan::setIfBuild(bool b)
@@ -101,11 +138,12 @@ namespace ariel
         std::cout << "None of the players reached 10 points yet." << std::endl;
     }
 
-    void Catan::rollDice() // what happend if its 7 ?
+    int Catan::rollDice() // what happend if its 7 ?
     {
         // Logic to roll the dice and distribute resources
         int diceRoll = rand() % 6 + 1 + rand() % 6 + 1; // Simulate rolling two six-sided dice
-        std::cout << "Dice roll: " << diceRoll << std::endl;
+        return diceRoll;
+        // std::cout << "Dice roll: " << diceRoll << std::endl;
         // Distribute resources based on the dice roll
     }
 }
