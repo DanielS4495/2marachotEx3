@@ -21,9 +21,9 @@ namespace ariel
     // std::shared_ptr<Board> Catan::getBoard() const {
     //     return board;
     // }
-    Catan::Catan(const std::vector<Player> &players) : players(players), currentPlayerIndex(0), ifBuild(false), board(nullptr)
+    Catan::Catan(const std::vector<Player> &players) : players(players), currentPlayerIndex(0), ifBuild(false), board(std::make_shared<Board>())
     {
-        chooseStartingPlayer(); // Assuming this doesn't call getBoard
+        // chooseStartingPlayer(); // Assuming this doesn't call getBoard
     }
 
     Board &Catan::getBoard()

@@ -16,16 +16,18 @@ namespace ariel
     class Board
     {
     private:
-        int BOARD_SIZE = 5;
+        // int BOARD_SIZE = 5;
         static std::shared_ptr<Board> instance;
         std::unordered_map<int, std::vector<int>> adjList;           // Adjacency list for settlements
         std::unordered_map<int, std::vector<int>> roadAdjList;       // Adjacency list for roads
         // std::unordered_map<int, std::shared_ptr<Tile>> tiles;
         std::vector<Tile *> tiles;                                   // Tiles on the board
-        std::vector<Node *> nodes;   
+        std::vector<Node > nodes;   
         std::unordered_map<int, std::shared_ptr<Piece>> settlements; // Settlements placed on nodes
         std::unordered_map<int, std::shared_ptr<Piece>> roads;       // Roads placed on edges
         std::unordered_map<int, std::shared_ptr<Piece>> city;        // city placed on nodes
+        vector<Tile*> findTile(vector<string> place,vector<int> number); //find the tiles we looking for
+        Node* findNode(vector<Tile*> t);//find the node we looking for
 
     public:
         Board(const Board &) = delete;               // Disable copy constructor
@@ -40,10 +42,9 @@ namespace ariel
         std::shared_ptr<Piece> getPieceAtNode(int node);
         void removePieceAtNode(int node);
         void placePieceAtNode(int node, std::shared_ptr<Piece> piece);
-
         void printBoard() const;
         void moveRobber(int tileNumber);
-        std::shared_ptr<Tile> getTile(int tileNumber) const;
+        std::shared_ptr<Tile *> getTile(int tileNumber) const;
     };
 
 }

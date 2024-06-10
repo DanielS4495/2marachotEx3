@@ -1,13 +1,39 @@
 #include "hexagon.hpp"
+#include "tile.hpp"
 namespace ariel
 {
-    ariel::Node::Node(int number, vector<Tile *> tile)
+    Node::Node(int number, vector<Tile *> tile)
     {
         this->number = number;
         this->tile = tile;
         this->hasSettlement = NULL;
         this->hasCity = NULL;
         this->owner = NULL;
+    }
+    Node::Node(int number, Tile* tile)
+    {
+        vector<Tile *> t;
+        t.push_back(tile);
+        Node(number, t);
+    }
+    Node::Node(int number, Tile* tile1, Tile* tile2)
+    {
+        vector<Tile *> t;
+        t.push_back(tile1);
+
+        t.push_back(tile1);
+
+        Node(number, t);
+    }
+    Node::Node(int id, Tile* tile1, Tile* tile2, Tile* tile3)
+    {
+        vector<Tile *> t;
+        t.push_back(tile1);
+
+        t.push_back(tile2);
+
+        t.push_back(tile3);
+        Node(id, t);
     }
     vector<Tile *> Node::getTile()
     {
@@ -29,7 +55,7 @@ namespace ariel
     {
         return this->owner;
     }
-    vector<Node *> Node::getConnectNode()
+    vector<Node> Node::getConnectNode()
     {
         return this->connectNode;
     }
@@ -45,8 +71,29 @@ namespace ariel
     {
         this->owner = &p;
     }
-    void Node::setConnectNode(vector<Node *> node)
+    void Node::setConnectNode(vector<Node> node)
     {
         this->connectNode = node;
+    }
+    void Node::setConnectNode(Node node)
+    {
+        vector<Node> n;
+        n.push_back(node);
+        setConnectNode(n);
+    }
+    void Node::setConnectNode(Node node1, Node node2)
+    {
+        vector<Node> n;
+        n.push_back(node1);
+        n.push_back(node2);
+        setConnectNode(n);
+    }
+    void Node::setConnectNode(Node node1, Node node2, Node node3)
+    {
+        vector<Node> n;
+        n.push_back(node1);
+        n.push_back(node2);
+        n.push_back(node3);
+        setConnectNode(n);
     }
 }

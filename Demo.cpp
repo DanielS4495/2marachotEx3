@@ -20,10 +20,8 @@ int main()
     vector<Player> players = {p1, p2, p3};
     // Catan catan(players);
     Catan &catan = Catan::getInstance(players);
-    cout << "hi" << endl;
     // Starting of the game. Every player places two settlements and two roads.
     catan.chooseStartingPlayer(); // should print the name of the starting player, assume it is Amit.
-    cout << "hi" << endl;
     // std::shared_ptr<Board> board = catan.getBoard();
     Board &board = catan.getBoard();
     // ariel::Board& board = catan.getBoard(); // get the board of the game.

@@ -1,10 +1,10 @@
-CXX = clang++
+CXX = g++
 CXXFLAGS = -std=c++11 -Werror -Wsign-conversion -pedantic
 VALGRIND_FLAGS = -v --leak-check=full --show-leak-kinds=all --error-exitcode=99
 LDLIBS = -pthread
 # main.cpp
-SOURCES = board.cpp player.cpp card.cpp resource.cpp tile.cpp catan.cpp Demo.cpp
-HEADERS = board.hpp player.hpp card.hpp resource.hpp piece.hpp tile.hpp catan.hpp
+SOURCES = board.cpp player.cpp card.cpp resource.cpp tile.cpp hexagon.cpp catan.cpp Demo.cpp
+HEADERS = board.hpp player.hpp card.hpp resource.hpp piece.hpp tile.hpp hexagon.hpp catan.hpp
 OBJECTS = $(SOURCES:.cpp=.o)
 
 EXECUTABLES = catan

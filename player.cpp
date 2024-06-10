@@ -18,7 +18,7 @@ namespace ariel
         this->victoryPoints = 0;
         this->roadCard = false;
         this->knightCard = false;
-        
+
         // for (const auto &pair : stringToResource)
         // {
         //     this->resources[pair.second] = 0;
@@ -136,41 +136,62 @@ namespace ariel
     }
     void Player::placeSettelemnt(const std::vector<std::string> &places, const std::vector<int> &placesNum)
     { // check if there are enough resource to build
-        if (getResourceCount("WOOD") > 0 && getResourceCount("SHEEP") > 0 && getResourceCount("WHEAT") > 0 && getResourceCount("ORE") > 0 && getNumberOfSettlement() < 5)
-        // board.placeSettlement(places, placesNum);
+        try
         {
-            removeResource("WOOD");
-            removeResource("SHEEP");
-            removeResource("WHEAT");
-            removeResource("ORE");
+            if (getResourceCount("WOOD") > 0 && getResourceCount("SHEEP") > 0 && getResourceCount("WHEAT") > 0 && getResourceCount("ORE") > 0 && getNumberOfSettlement() < 5)
+            // board.placeSettlement(places, placesNum);
+            {
+                removeResource("WOOD");
+                removeResource("SHEEP");
+                removeResource("WHEAT");
+                removeResource("ORE");
+            }
+            else
+                throw std::invalid_argument("Invalid dont have enough resource type or dont have enough settelemnt to build");
         }
-        else
-            throw std::invalid_argument("Invalid dont have enough resource type or dont have enough settelemnt to build");
+        catch (const std::exception &e)
+        {
+            cout << e.what() << endl;
+        }
     }
     void Player::placeCity(const std::vector<std::string> &places, const std::vector<int> &placesNum)
     {
-        if (getResourceCount("BRICK") > 3 && getResourceCount("WHEAT") > 2 && getNumberOfCity() < 4)
-        // board.placeSettlement(places, placesNum);
+        try
         {
-            removeResource("WHEAT");
-            removeResource("WHEAT");
-            removeResource("BRICK");
-            removeResource("BRICK");
-            removeResource("BRICK");
+            if (getResourceCount("BRICK") > 3 && getResourceCount("WHEAT") > 2 && getNumberOfCity() < 4)
+            // board.placeSettlement(places, placesNum);
+            {
+                removeResource("WHEAT");
+                removeResource("WHEAT");
+                removeResource("BRICK");
+                removeResource("BRICK");
+                removeResource("BRICK");
+            }
+            else
+                throw std::invalid_argument("Invalid dont have enough resource type or dont have enough city to build");
         }
-        else
-            throw std::invalid_argument("Invalid dont have enough resource type or dont have enough city to build");
+        catch (const std::exception &e)
+        {
+            cout << e.what() << endl;
+        }
     }
     void Player::placeRoad(const std::vector<std::string> &places, const std::vector<int> &placesNum)
     {
-        if (getResourceCount("WOOD") > 0 && getResourceCount("ORE") > 0 && getNumberOfRoads() < 15)
-        // board.placeroad(placesNum[0],placesNum[1],this);
+        try
         {
-            removeResource("WOOD");
-            removeResource("ORE");
+            if (getResourceCount("WOOD") > 0 && getResourceCount("ORE") > 0 && getNumberOfRoads() < 15)
+            // board.placeroad(placesNum[0],placesNum[1],this);
+            {
+                removeResource("WOOD");
+                removeResource("ORE");
+            }
+            else
+                throw std::invalid_argument("Invalid dont have enough resource type or dont have enough roads to build");
         }
-        else
-            throw std::invalid_argument("Invalid dont have enough resource type or dont have enough roads to build");
+        catch (const std::exception &e)
+        {
+            cout << e.what() << endl;
+        }
     }
     int Player::getNumberOfSettlement() const
     {

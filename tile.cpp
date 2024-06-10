@@ -4,15 +4,15 @@
 #include <string>
 namespace ariel
 {
-    bool Tile::hasRobber() const
-    {
-        return this->robberPresent;
-    }
+    // bool Tile::hasRobber() const
+    // {
+    //     return this->robberPresent;
+    // }
 
-    void Tile::placeRobber(bool hasRobber)
-    {
-        robberPresent = hasRobber;
-    }
+    // void Tile::placeRobber(bool hasRobber)
+    // {
+    //     robberPresent = hasRobber;
+    // }
     class ForestTile : public Tile
     {
         std::shared_ptr<Resource> resource;
@@ -24,6 +24,7 @@ namespace ariel
         std::string getType() const override { return "Forest"; }
         std::shared_ptr<Resource> getResource() const override { return resource; }
         int getNumber() const override { return number; }
+        vector<int> getNode() const override { return node; }
     };
 
     class HillsTile : public Tile
@@ -37,6 +38,7 @@ namespace ariel
         std::string getType() const override { return "Hills"; }
         std::shared_ptr<Resource> getResource() const override { return resource; }
         int getNumber() const override { return number; }
+        vector<int> getNode() const override { return node; }
     };
 
     class PastureTile : public Tile
@@ -50,6 +52,7 @@ namespace ariel
         std::string getType() const override { return "Pasture Land"; }
         std::shared_ptr<Resource> getResource() const override { return resource; }
         int getNumber() const override { return number; }
+        vector<int> getNode() const override { return node; }
     };
 
     class AgriculturalTile : public Tile
@@ -63,6 +66,7 @@ namespace ariel
         std::string getType() const override { return "Agricultural Land"; }
         std::shared_ptr<Resource> getResource() const override { return resource; }
         int getNumber() const override { return number; }
+        vector<int> getNode() const override { return node; }
     };
 
     class MountainsTile : public Tile
@@ -76,6 +80,7 @@ namespace ariel
         std::string getType() const override { return "Mountains"; }
         std::shared_ptr<Resource> getResource() const override { return resource; }
         int getNumber() const override { return number; }
+        vector<int> getNode() const override { return node; }
     };
     class DesertTile : public Tile
     {
@@ -88,6 +93,7 @@ namespace ariel
         std::string getType() const override { return "Mountains"; }
         std::shared_ptr<Resource> getResource() const override { return resource; }
         int getNumber() const override { return number; }
+        vector<int> getNode() const override { return node; }
     };
 
 }
