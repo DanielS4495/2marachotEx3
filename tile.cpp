@@ -4,15 +4,15 @@
 #include <string>
 namespace ariel
 {
-    // bool Tile::hasRobber() const
-    // {
-    //     return this->robberPresent;
-    // }
+    bool Tile::hasRobber() const
+    {
+        return this->robberPresent;
+    }
 
-    // void Tile::placeRobber(bool hasRobber)
-    // {
-    //     robberPresent = hasRobber;
-    // }
+    void Tile::setRobber(bool hasRobber)
+    {
+        robberPresent = hasRobber;
+    }
     class ForestTile : public Tile
     {
         std::shared_ptr<Resource> resource;

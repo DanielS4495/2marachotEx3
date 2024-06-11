@@ -20,7 +20,7 @@ namespace ariel
         virtual int getNumber() const = 0;
         virtual vector<int> getNode() const = 0;
         // virtual std::vector<int> getNodesId(); // connected node number
-        // bool hasRobber() const;
-        // void placeRobber(bool hasRobber);
+        bool hasRobber() const;
+        void setRobber(bool hasRobber);
     };
 }

@@ -25,7 +25,7 @@ namespace ariel
         std::vector<std::shared_ptr<Piece>> roads;
         // std::shared_ptr<Board> board;
         void setIfBuild(bool status);
-
+        void chooseStartingPlayer();
         // Catan(const std::vector<Player> &players);
         // void initializeBoard();
 
@@ -36,15 +36,16 @@ namespace ariel
         // std::shared_ptr<Board> getBoard() const;
         static Catan &getInstance(const std::vector<Player> &players);
         Board &getBoard();
-        Player* getCurrentPlayer() const;
-        void chooseStartingPlayer();
+        Player *getCurrentPlayer() const;
+
         void start();
-        void playTurn();    
+        void playTurn();
         void nextPlayer();
         bool checkVictory();
         bool checkBuild(); // check if the player build something so he cant trade
         void printWinner();
         int rollDice(); // do i need this? player has it
+        void giveResourceStart();
 
         // Other member functions
     };

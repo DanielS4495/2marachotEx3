@@ -40,7 +40,7 @@ namespace ariel
             int getVictoryPoints() const;
             void addVictoryPoints();
 
-            void addResource(const string &getResource);
+            void addResource(std::shared_ptr<Resource> resource);
             void removeResource(const string &removeResource); // maybe need to be private
             int getResourceCount(const std::string &getResource) const;
 
@@ -55,6 +55,10 @@ namespace ariel
             int getNumberOfSettlement() const;
             int getNumberOfCity() const;
             int getNumberOfRoads() const;
+
+            int getSettlementLimit() const;
+            int getCityLimit() const;
+            int getRoadsLimit() const;
 
             void rollDice();
             void endTurn();

@@ -8,9 +8,9 @@ namespace ariel
 {
     std::shared_ptr<Board> Board::instance = nullptr;
     Board::Board()
-    {   //create tiles and give them numbers of nodes that are connected to them
-        //because we create them after the tile
-        //give us the oppsition to find the node using tiles
+    { // create tiles and give them numbers of nodes that are connected to them
+        // because we create them after the tile
+        // give us the oppsition to find the node using tiles
         tiles.push_back(new MountainsTile(10, {1, 4, 5, 8, 9, 10}));
         tiles.push_back(new PastureTile(2, {2, 5, 6, 10, 11, 12}));
         tiles.push_back(new ForestTile(9, {3, 6, 7, 12, 13, 14}));
@@ -30,8 +30,8 @@ namespace ariel
         tiles.push_back(new HillsTile(5, {40, 41, 42, 48, 49, 50}));
         tiles.push_back(new AgriculturalTile(6, {42, 43, 44, 50, 51, 52}));
         tiles.push_back(new PastureTile(11, {44, 45, 46, 52, 53, 54}));
-        
-        //create node and connect them to tiles
+
+        // create node and connect them to tiles
         int number = 1;
         nodes.push_back(Node(number++, tiles[1]));
         nodes.push_back(Node(number++, tiles[2]));
@@ -88,7 +88,7 @@ namespace ariel
         nodes.push_back(Node(number++, tiles[19]));
         nodes.push_back(Node(number++, tiles[19]));
 
-        //conncte node to other node
+        // conncte node to other node
         size_t id = 1;
         nodes[id++].setConnectNode(nodes[4], nodes[5]);
         nodes[id++].setConnectNode(nodes[5], nodes[6]);
@@ -145,20 +145,175 @@ namespace ariel
         nodes[id++].setConnectNode(nodes[52], nodes[54]);
         nodes[id++].setConnectNode(nodes[46], nodes[53]);
     }
-    vector<Tile *> Board::findTile(vector<string> place, vector<int> number)
+    vector<Tile *> Board::findTiles(vector<string> place, vector<int> number)
     {
-        return vector<Tile *>();
-    }
-    Node *Board::findNode(vector<Tile *> t)
-    {
-        if (t.size() == 3)
-            vector<int> firstNode = t[1]->getNode();
-        vector<int> secendNode = t[2]->getNode();
-        vector<int> thirdNode = t[3]->getNode();
-        for (int i = 0; i < 6; i++)
+        vector<Tile *> matchingTiles; // Stores found tiles
+        size_t i = 1, j = 1;
+        // Iterate through all tiles in the board
+        for (Tile *tile : tiles)
         {
+            // Check if place and number match (assuming tile has attributes for place and number)
+            if (i < place.size() || j < place.size())
+                if (tile->getType() == place[j] && tile->getNumber() == number[i])
+                {
+                    matchingTiles.push_back(tile); // Add matching tile pointer to the vector
+                    j++;
+                    i++;
+                }
         }
-        return nullptr;
+
+        return matchingTiles;
+    }
+    int Board::findNode(vector<Tile *> t)
+    { // if he has only one then there is two node that can be found!
+        if (t.size() == 1)
+        {
+            vector<int> tile = t[1]->getNode();
+            for (int i : tile)
+            {
+                if (nodes[(size_t)i].getTile().size() == 1)
+                    if (!nodes[(size_t)i].getHasCity() || !nodes[(size_t)i].getHasSettlement())
+                        return i;
+            }
+        }
+        vector<int> firstNode = t[1]->getNode();
+        vector<int> secendNode = t[2]->getNode();
+        if (t.size() == 3)
+        {
+            vector<int> thirdNode = t[3]->getNode();
+            for (int i : firstNode) // iterate throw the node of the first tile
+            {
+                for (int j = 1; j <= firstNode.size(); j++)
+                {
+                    if (i == secendNode[(size_t)j]) // check if first and secend node are the same
+                        for (int k : thirdNode)     // iterate throw the node of the third tile
+                        {
+                            if (i == k)
+                                return i;
+                        }
+                    if (i == thirdNode[(size_t)j]) // check if first and third node are the same
+                        for (int k : secendNode)   // iterate throw the node of the secend tile
+                        {
+                            if (i == k)
+                                return i;
+                        }
+                }
+            }
+        }
+        for (int i : firstNode)
+        {
+            for (int j : secendNode)
+            {
+                if (i == j)
+                    if (nodes[(size_t)i].getTile().size() == 2) // check if has two tile connected and not three
+                        return i;
+            }
+        }
+        return -1;
+    }
+
+    int Board::findRoad(int n1, int n2) const
+    {
+
+        bool b = false;
+        for (int i; i < roads.size(); i++)
+        {
+            Road r = roads[i];
+            int r1 = r.getNode1()->getNumber();
+            int r2 = r.getNode1()->getNumber();
+            if ((r1 == n1 || r1 == n2) && (r1 == n1 || r1 == n2))
+            {
+                b = true;
+                return i;
+            }
+            return -1;
+        }
+    }
+
+    PlacementError Board::ValidateSettlement(int node, const Player &player) const
+    {
+        // check for invalid node
+        if (node > 0 && node < 55)
+        {
+            return PlacementError::INVALID_NODE;
+        }
+        // check for occupied
+        if (nodes[node].getHasSettlement() || nodes[node].getHasCity())
+        {
+            return PlacementError::NODE_OCCUPIED;
+        }
+        // check for Adjacent Settlement
+        vector<Node> n1 = nodes[node].getConnectNode();
+        for (Node node : n1)
+        {
+            if (node.getHasSettlement())
+                return PlacementError::ADJACENT_SETTLEMENT;
+        }
+        // Check for road connection
+        bool b = false;
+        vector<Node> n2 = nodes[node].getConnectNode();
+        for (Node n : n2)
+        {
+            int s = findRoad(n.getNumber(), node);
+            if (s != -1)
+                if (*roads[s].getOwner() == player)
+                    b = true;
+        }
+        if (!b)
+            return PlacementError::DONT_HAVE_ROAD_CONNECTED;
+        //  Check player settlement limit
+        if (player.getNumberOfSettlement() >= player.getSettlementLimit())
+        {
+            return PlacementError::PLAYER_SETTLEMENT_LIMIT;
+        }
+        // can be implement settlement
+        return PlacementError::SUCCESS;
+    }
+    PlacementError Board::ValidateCity(int node, const Player &player) const
+    {
+        // check for invalid node
+        if (node > 0 && node < 55)
+        {
+            return PlacementError::INVALID_NODE;
+        }
+        // check for occupied
+        if (nodes[node].getHasCity())
+        {
+            return PlacementError::NODE_OCCUPIED;
+        }
+        // check for not occupied by settlement
+        if (!nodes[node].getHasSettlement())
+        {
+            return PlacementError::NODE_OCCUPIED_NOT_BY_SETTLEMENT;
+        }
+        //  Check player city limit
+        if (player.getCityLimit() <= player.getNumberOfCity())
+        {
+            return PlacementError::PLAYER_SETTLEMENT_LIMIT;
+        }
+        // can be implement city
+        return PlacementError::SUCCESS;
+    }
+
+    PlacementError Board::ValidateRoad(int node1, int node2, const Player &player) const
+    {
+        // check for invalid node
+        if (node1 > 0 && node1 < 55 && node2 > 0 && node2 < 55)
+        {
+            return PlacementError::INVALID_NODE;
+        }
+        if (node1 == node2)
+            return PlacementError::INVALID_NODE;
+        //  Check player road limit
+        if (player.getRoadsLimit() <= player.getNumberOfRoads())
+        {
+            return PlacementError::PLAYER_ROAD_LIMIT;
+        }
+        // check for occupied by road
+        if (findRoad(node1, node2) != -1)
+            return PlacementError::ROAD_OCCUPIED;
+        // can be implement road
+        return PlacementError::SUCCESS;
     }
     std::shared_ptr<Board> Board::getInstance()
     {
@@ -174,99 +329,91 @@ namespace ariel
         {
             delete tile;
         }
-        // for (Node node: nodes)
-        // {
-        //     delete node;
-        // }
     }
-    // bool Board::areAdjacent(int node1, int node2)
-    // {
-    //     for (const auto &adjNode : adjList[node1])
-    //     {
-    //         if (adjNode == node2)
-    //         {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
-
-    bool Board::placeSettlement(int node, const Player &player)
+    bool Board::placeSettlement(int node, Player &player)
     {
-        // Ensure the placement is valnumber
-        if (settlements.find(node) != settlements.end())
+        // Validate placement and handle potential errors (implement based on game rules)
+        PlacementError error = ValidateSettlement(node, player);
+        if (error != PlacementError::SUCCESS)
         {
-            return false; // Settlement already exists
+            std::cerr << "Error placing settlement: code " << static_cast<int>(error) << std::endl;
+            return false;
+        }
+        // catch (const std::exception &e)
+        // {
+        //     cout << e.what() << endl;
+        // }
+        // Valid placement
+        nodes[(size_t)node].setHasSettlement(true);
+        nodes[(size_t)node].setOwner(player);
+        return true;
+    }
+
+    bool Board::placeCity(int node, Player &player)
+    {
+        PlacementError error = ValidateCity(node, player);
+        if (error != PlacementError::SUCCESS)
+        {
+            std::cerr << "Error placing city: code " << static_cast<int>(error) << std::endl;
+            return false;
+        }
+        nodes[(size_t)node].setHasSettlement(false);
+        nodes[(size_t)node].setHasCity(true);
+        return true;
+    }
+
+    bool Board::placeRoad(int node1, int node2, Player &player)
+    {
+        PlacementError error = ValidateRoad(node1, node2, player);
+        if (error != PlacementError::SUCCESS)
+        {
+            std::cerr << "Error placing road: code " << static_cast<int>(error) << std::endl;
+            return false;
         }
 
-        // Check if any neighboring nodes already have settlements
-        for (const auto &adjNode : adjList[node])
-        {
-            if (settlements.find(adjNode) != settlements.end())
-            {
-                return false; // Settlement adjacent to another settlement
+        // check if there is road connect of the same player by checking
+        Road r = Road(nodes[node1], nodes[node2], player);
+        roads.push_back(r);
+        return true;
+    }
+    void Board::moveRobber(int tileNumber)
+    {
+        if (numberRobberTile == -1)
+            tiles[(size_t)tileNumber]->setRobber(true);
+        else{
+            tiles[(size_t)numberRobberTile]->setRobber(false);
+            tiles[(size_t)tileNumber]->setRobber(false);
+        }
+    }
+    void Board::giveResourceByDice(int dice)
+    {
+        // for(Node n:nodes){
+
+        // }
+        for(Tile *t:tiles){
+            if(t->getNumber()==dice)
+            if(!t->hasRobber()){
+                vector<int> c = t->getNode();
+                for(int i:c){
+                    if(nodes[(size_t)i].getHasSettlement())
+                    nodes[(size_t)i].getOwner()->addResource(1,t->getResource());
+                    if(nodes[(size_t)i].getHasCity())
+                    nodes[(size_t)i].getOwner()->addResource(1,t->getResource());
+                }
             }
         }
-
-        settlements[node] = std::make_shared<Settelemnt>();
-        return true;
     }
-    bool Board::placeCity(int node, const Player &player)
-    {
-        std::shared_ptr<Piece> piece = getPieceAtNode(node);
-
-        // Check if the piece at the node is a Settlement and belongs to the player
-        // if (piece && piece->getType() == "settlement" && piece->getPlayer().getName() == player.getName())
-        // {
-        //     // Remove the settlement
-        //     removePieceAtNode(node);
-
-        //     // Place the city
-        //     std::shared_ptr<Piece> city = std::make_shared<City>(player);
-        //     placePieceAtNode(node, city);
-
-        //     return true;
-        // }
-
-        // No settlement of the same player at the node
-        return false;
-    }
-    bool Board::placeRoad(int node1, int node2, const Player &player)
-    {
-        // Ensure the placement is valnumber
-        // if (!areAdjacent(node1, node2) || roads.find(node1) != roads.end() || roads.find(node2) != roads.end())
-        // {
-        //     return false; // Invalnumber road placement
-        // }
-
-        // roadAdjList[node1].push_back(node2);
-        // roadAdjList[node2].push_back(node1);
-        // roads[node1] = std::make_shared<Road>();
-        // roads[node2] = std::make_shared<Road>();
-        return true;
-    }
-
-    std::shared_ptr<Piece> Board::getPieceAtNode(int node)
-    {
-        return std::shared_ptr<Piece>();
-    }
-
-    // std::shared_ptr<Tile> getTile(int node)
+    // std::shared_ptr<Piece> Board::getPieceAtNode(int node)
     // {
-    //     if (&tiles.find(node) != &tiles.end())
-    //     {
-    //         return &tiles[node];
-    //     }
-    //     return nullptr;
+    //     return std::shared_ptr<Piece>();
+    // }
+    // void Board::removePieceAtNode(int node)
+    // {
     // }
 
-    void Board::removePieceAtNode(int node)
-    {
-    }
-
-    void Board::placePieceAtNode(int node, std::shared_ptr<Piece> piece)
-    {
-    }
+    // void Board::placePieceAtNode(int node, std::shared_ptr<Piece> piece)
+    // {
+    // }
 
     // vonumber Board::printBoard() const
     // {
@@ -366,5 +513,4 @@ namespace ariel
     //     }
     //     std::cout << std::endl;
     // }
-
 }

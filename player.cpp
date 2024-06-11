@@ -44,11 +44,12 @@ namespace ariel
     {
         this->victoryPoints++;
     }
-    void Player::addResource(const std::string &getResource) // how does it know what type its a string not type resource
+    void Player::addResource(int count,std::shared_ptr<Resource> resource) // how does it know what type its a string not type resource
     {
-        ResourceType resourceType = getResourceTypeFromString(getResource);
-        std::shared_ptr<Resource> res = createResource(resourceType);
-        resources[res]++;
+        // ResourceType resourceType = getResourceTypeFromString(getResource);
+        // std::shared_ptr<Resource> res = createResource(resourceType);
+        if(count>0)
+        resources[resource]+=count;
     }
     void Player::removeResource(const std::string &removeResource)
     {
@@ -204,6 +205,18 @@ namespace ariel
     int Player::getNumberOfRoads() const
     {
         return roads.size();
+    }
+    int Player::getSettlementLimit() const
+    {
+        return 5;
+    }
+    int Player::getCityLimit() const
+    {
+        return 4;
+    }
+    int Player::getRoadsLimit() const
+    {
+        return 15;
     }
     void Player::setKnightCard(bool b)
     {

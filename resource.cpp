@@ -23,12 +23,12 @@ namespace ariel
         }
     }
 
-    std::unordered_map<std::string, ResourceType> stringToResource = {
-        {"WOOD", ResourceType::WOOD},
-        {"BRICK", ResourceType::BRICK},
-        {"SHEEP", ResourceType::SHEEP},
-        {"WHEAT", ResourceType::WHEAT},
-        {"ORE", ResourceType::ORE}};
+    // std::unordered_map<std::string, ResourceType> stringToResource = {
+    //     {"WOOD", ResourceType::WOOD},
+    //     {"BRICK", ResourceType::BRICK},
+    //     {"SHEEP", ResourceType::SHEEP},
+    //     {"WHEAT", ResourceType::WHEAT},
+    //     {"ORE", ResourceType::ORE}};
 
     std::shared_ptr<Resource> createResource(ResourceType type)
     {

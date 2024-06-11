@@ -21,9 +21,10 @@ namespace ariel
     // std::shared_ptr<Board> Catan::getBoard() const {
     //     return board;
     // }
-    Catan::Catan(const std::vector<Player> &players) : players(players), currentPlayerIndex(0), ifBuild(false), board(std::make_shared<Board>())
+    Catan::Catan(const std::vector<Player> &players) : players(players), ifBuild(false), board(std::make_shared<Board>())
     {
-        // chooseStartingPlayer(); // Assuming this doesn't call getBoard
+        chooseStartingPlayer(); // Assuming this doesn't call getBoard
+       
     }
 
     Board &Catan::getBoard()
@@ -52,8 +53,9 @@ namespace ariel
     {
         return this->currentPlayer;
     }
-    void Catan::start()
+    void Catan::start() // do two rounds of place settlement and roads
     {
+        giveResourceStart();
         // Game starting logic
     }
 
@@ -145,5 +147,25 @@ namespace ariel
         return diceRoll;
         // std::cout << "Dice roll: " << diceRoll << std::endl;
         // Distribute resources based on the dice roll
+    }
+    void Catan::giveResourceStart()
+    {
+        ResourceType resourceType;
+        resourceType = getResourceTypeFromString("WOOD");
+        std::shared_ptr<Resource> res1 = createResource(resourceType);
+        resourceType = getResourceTypeFromString("SHEEP");
+        std::shared_ptr<Resource> res2 = createResource(resourceType);
+        resourceType = getResourceTypeFromString("WHEAT");
+        std::shared_ptr<Resource> res3 = createResource(resourceType);
+        resourceType = getResourceTypeFromString("ORE");
+        std::shared_ptr<Resource> res4 = createResource(resourceType);
+
+        for (Player p : players)
+        {
+            p.addResource(4, res1); // two roads two sett..
+            p.addResource(2, res2); // two sett..
+            p.addResource(2, res3); // two sett..
+            p.addResource(4, res4); // two roads two sett..
+        }
     }
 }

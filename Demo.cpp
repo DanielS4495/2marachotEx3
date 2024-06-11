@@ -21,7 +21,7 @@ int main()
     // Catan catan(players);
     Catan &catan = Catan::getInstance(players);
     // Starting of the game. Every player places two settlements and two roads.
-    catan.chooseStartingPlayer(); // should print the name of the starting player, assume it is Amit.
+    // catan.chooseStartingPlayer(); // should print the name of the starting player, assume it is Amit.
     // std::shared_ptr<Board> board = catan.getBoard();
     Board &board = catan.getBoard();
     // ariel::Board& board = catan.getBoard(); // get the board of the game.
