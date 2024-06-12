@@ -44,19 +44,19 @@ namespace ariel
     {
         this->victoryPoints++;
     }
-    void Player::addResource(int count,std::shared_ptr<Resource> resource) // how does it know what type its a string not type resource
+    void Player::addResource(int count, const std::string &getResource)
     {
-        // ResourceType resourceType = getResourceTypeFromString(getResource);
-        // std::shared_ptr<Resource> res = createResource(resourceType);
-        if(count>0)
-        resources[resource]+=count;
+        ResourceType resourceType = getResourceTypeFromString(getResource);
+        std::shared_ptr<Resource> res = createResource(resourceType);
+        if (count > 0)
+            resources[res] += count;
     }
-    void Player::removeResource(const std::string &removeResource)
+    void Player::removeResource(int count, const std::string &removeResource)
     {
         ResourceType resourceType = getResourceTypeFromString(removeResource);
         std::shared_ptr<Resource> res = createResource(resourceType);
-        if (resources[res] > 0)
-            resources[res]--;
+        if (resources[res] >= count)
+            resources[res] -= count;
         else
             throw std::invalid_argument("Invalid dont have enough resource type");
     }
@@ -73,6 +73,20 @@ namespace ariel
         {
             return 0;
         }
+    }
+    int Player::countResources()
+    {
+        // string listres = {"wood", "ss"};
+        int count = 0;
+        // for (int i; i < resources.size(); i++)
+        // {
+        //     string getResource = listres[i];
+        //     // ResourceType resourceType = getResourceTypeFromString(getResource);
+        //     // std::shared_ptr<Resource> res = createResource(resourceType);
+        //     // resources[res]
+        //     count += getResourceCount(listres[i]);
+        // }
+        return count;
     }
     void Player::addDevelopment(const std::string &getDevelopment)
     {
@@ -93,8 +107,13 @@ namespace ariel
             throw std::invalid_argument("Invalid dont have enough resource type");
         try
         {
-            // std::shared_ptr<Card> card = createCard(developmentType);
-            // card->play(player);
+            if (removeDevelopment == "knight"){
+                this->knight++;
+                // if()//sent to catan to check if this player deserve cardknight
+                this->setKnightCard(true);}
+            if (removeDevelopment == "Road Builder")
+                this->countRoads++;
+                //  card->play(this);
         }
         catch (const std::invalid_argument &e)
         {
@@ -127,10 +146,31 @@ namespace ariel
     void Player::endTurn() // need to change buck the ifbuild so it wont affect his next play
     // also need to check if it is his turn to play
     {
+        this->hisTurn = false;
+    }
+    void Player::startTurn()
+    {
+        this->hisTurn = true;
+    }
+    void Player::hasBuild(bool b)
+    {
+        this->hasBuildThisTurn = b;
+    }
+    bool Player::getHasBuild() const
+    {
+        return this->hasBuildThisTurn;
     }
     // first need to check if they have this resource
     void Player::trade(Player &other, const std::string &giveResource, const std::string &getResource, int giveAmount, int getAmount)
     {
+        if (getHasBuild())
+        {
+            if (giveAmount > 0 && getAmount > 0)
+                if (this->getResourceCount(giveResource) > giveAmount && other.getResourceCount(getResource) > getAmount)
+                    this->removeResource(giveAmount, giveResource);
+            this->addResource(getAmount, getResource);
+            other.removeResource(getAmount, getResource);
+        }
     }
     void Player::buyDevelopmentCard()
     {
@@ -139,16 +179,28 @@ namespace ariel
     { // check if there are enough resource to build
         try
         {
-            if (getResourceCount("WOOD") > 0 && getResourceCount("SHEEP") > 0 && getResourceCount("WHEAT") > 0 && getResourceCount("ORE") > 0 && getNumberOfSettlement() < 5)
-            // board.placeSettlement(places, placesNum);
-            {
-                removeResource("WOOD");
-                removeResource("SHEEP");
-                removeResource("WHEAT");
-                removeResource("ORE");
-            }
+            if (hisTurn)
+                if (getResourceCount("WOOD") > 0 && getResourceCount("SHEEP") > 0 && getResourceCount("WHEAT") > 0 && getResourceCount("ORE") > 0 && getNumberOfSettlement() < 5)
+                // board.placeSettlement(places, placesNum);
+                {
+                    vector<Tile *> t = board->findTiles(places, placesNum);
+                    int node = board->findNode(t);
+                    bool canPlace = board->placeSettlement(node, *this);
+                    if (canPlace && this->countSettlements < getSettlementLimit())
+                    {
+                        removeResource(1, "WOOD");
+                        removeResource(1, "SHEEP");
+                        removeResource(1, "WHEAT");
+                        removeResource(1, "ORE");
+                        this->countSettlements++;
+                    }
+                    else
+                        throw std::invalid_argument("Invalid cant place settlement or got to the limit");
+                }
+                else
+                    throw std::invalid_argument("Invalid dont have enough resource type or dont have enough settelemnt to build");
             else
-                throw std::invalid_argument("Invalid dont have enough resource type or dont have enough settelemnt to build");
+                throw std::invalid_argument("Not the player turn");
         }
         catch (const std::exception &e)
         {
@@ -159,17 +211,25 @@ namespace ariel
     {
         try
         {
-            if (getResourceCount("BRICK") > 3 && getResourceCount("WHEAT") > 2 && getNumberOfCity() < 4)
-            // board.placeSettlement(places, placesNum);
-            {
-                removeResource("WHEAT");
-                removeResource("WHEAT");
-                removeResource("BRICK");
-                removeResource("BRICK");
-                removeResource("BRICK");
-            }
+            if (hisTurn)
+                if (getResourceCount("BRICK") > 3 && getResourceCount("WHEAT") > 2 && getNumberOfCity() < 4)
+                {
+                    vector<Tile *> t = board->findTiles(places, placesNum);
+                    int node = board->findNode(t);
+                    bool canPlace = board->placeSettlement(node, *this);
+                    if (canPlace && this->countCity < getCityLimit())
+                    {
+                        removeResource(2, "WHEAT");
+                        removeResource(3, "BRICK");
+                        this->countCity++;
+                    }
+                    else
+                        throw std::invalid_argument("Invalid cant place city or got to the limit");
+                }
+                else
+                    throw std::invalid_argument("Invalid dont have enough resource type or dont have enough city to build");
             else
-                throw std::invalid_argument("Invalid dont have enough resource type or dont have enough city to build");
+                throw std::invalid_argument("Not the player turn");
         }
         catch (const std::exception &e)
         {
@@ -180,14 +240,25 @@ namespace ariel
     {
         try
         {
-            if (getResourceCount("WOOD") > 0 && getResourceCount("ORE") > 0 && getNumberOfRoads() < 15)
-            // board.placeroad(placesNum[0],placesNum[1],this);
-            {
-                removeResource("WOOD");
-                removeResource("ORE");
-            }
+            if (hisTurn)
+                if (getResourceCount("WOOD") > 0 && getResourceCount("ORE") > 0 && getNumberOfRoads() < 15)
+                {
+                    vector<Tile *> t = board->findTiles(places, placesNum);
+                    int node = board->findNode(t);
+                    bool canPlace = board->placeSettlement(node, *this);
+                    if (canPlace && this->countRoads < getRoadsLimit())
+                    {
+                        removeResource(1, "WOOD");
+                        removeResource(1, "ORE");
+                        this->countRoads++;
+                    }
+                    else
+                        throw std::invalid_argument("Invalid cant place road or got to the limit");
+                }
+                else
+                    throw std::invalid_argument("Invalid dont have enough resource type or dont have enough roads to build");
             else
-                throw std::invalid_argument("Invalid dont have enough resource type or dont have enough roads to build");
+                throw std::invalid_argument("Not the player turn");
         }
         catch (const std::exception &e)
         {
@@ -196,15 +267,15 @@ namespace ariel
     }
     int Player::getNumberOfSettlement() const
     {
-        return settlements.size();
+        return this->countSettlements;
     }
     int Player::getNumberOfCity() const
     {
-        return City.size();
+        return this->countCity;
     }
     int Player::getNumberOfRoads() const
     {
-        return roads.size();
+        return this->countRoads;
     }
     int Player::getSettlementLimit() const
     {
@@ -264,5 +335,4 @@ namespace ariel
             return false;
         return true;
     }
-
 }

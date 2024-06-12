@@ -21,8 +21,8 @@ namespace ariel
         size_t currentPlayerIndex;
         bool ifBuild;
         std::vector<std::shared_ptr<Tile>> tiles;
-        std::vector<std::shared_ptr<Piece>> settlements;
-        std::vector<std::shared_ptr<Piece>> roads;
+        // std::vector<std::shared_ptr<Piece>> settlements;
+        // std::vector<std::shared_ptr<Piece>> roads;
         // std::shared_ptr<Board> board;
         void setIfBuild(bool status);
         void chooseStartingPlayer();
@@ -46,6 +46,7 @@ namespace ariel
         void printWinner();
         int rollDice(); // do i need this? player has it
         void giveResourceStart();
+        void finishTurn();
 
         // Other member functions
     };

@@ -1,18 +1,9 @@
-
 #include "tile.hpp"
 #include <memory>
 #include <string>
 namespace ariel
 {
-    bool Tile::hasRobber() const
-    {
-        return this->robberPresent;
-    }
-
-    void Tile::setRobber(bool hasRobber)
-    {
-        robberPresent = hasRobber;
-    }
+   
     class ForestTile : public Tile
     {
         std::shared_ptr<Resource> resource;

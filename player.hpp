@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include "card.hpp"
 #include "resource.hpp"
-#include "piece.hpp"
+// #include "piece.hpp"
 // #include "board.hpp"
 #include <stdexcept>
 #include <iostream>
@@ -24,13 +24,16 @@ namespace ariel
         int countMostConnectRoads;
         bool knightCard;
         bool roadCard;
+        bool hisTurn=false;
+        bool hasBuildThisTurn=false;
         // Board& board = *boardPtr; // Dereference the shared pointer
-        std::vector<std::shared_ptr<Piece>> City;
-        std::vector<std::shared_ptr<Piece>> settlements;
-        std::vector<std::shared_ptr<Piece>> roads;
+        int countCity=0;
+        int countSettlements=0;
+        int countRoads=0;
         std::unordered_map<std::shared_ptr<Resource>, int> resources;
         std::unordered_map<std::shared_ptr<Card>, int> development;
         void reduceVictoryPoints(int num);
+        // void addRoad();
 
     public:
             Player(const string &name, const int age);
@@ -40,9 +43,10 @@ namespace ariel
             int getVictoryPoints() const;
             void addVictoryPoints();
 
-            void addResource(std::shared_ptr<Resource> resource);
-            void removeResource(const string &removeResource); // maybe need to be private
+            void addResource(int count,const std::string & getResource);
+            void removeResource(int count,const string &removeResource); // maybe need to be private
             int getResourceCount(const std::string &getResource) const;
+            int countResources();
 
             void addDevelopment(const string &getDevelopment);
             void useDevelopment(const string &removeDevelopment);
@@ -55,6 +59,7 @@ namespace ariel
             int getNumberOfSettlement() const;
             int getNumberOfCity() const;
             int getNumberOfRoads() const;
+            
 
             int getSettlementLimit() const;
             int getCityLimit() const;
@@ -62,7 +67,10 @@ namespace ariel
 
             void rollDice();
             void endTurn();
-
+            void startTurn();
+            void hasBuild(bool b);
+            bool getHasBuild() const;
+            
             void trade(Player &other, const string &giveResource, const string &getResource, int giveAmount, int getAmount);
 
             void setKnightCard(bool b); // to add do true else false

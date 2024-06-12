@@ -150,31 +150,51 @@ namespace ariel
         vector<Tile *> matchingTiles; // Stores found tiles
         size_t i = 1, j = 1;
         // Iterate through all tiles in the board
-        for (Tile *tile : tiles)
+        while (i < place.size() || j < number.size())
         {
-            // Check if place and number match (assuming tile has attributes for place and number)
-            if (i < place.size() || j < place.size())
-                if (tile->getType() == place[j] && tile->getNumber() == number[i])
-                {
-                    matchingTiles.push_back(tile); // Add matching tile pointer to the vector
-                    j++;
-                    i++;
-                }
+            for (Tile *tile : tiles)
+            {
+                // Check if place and number match (assuming tile has attributes for place and number)
+                if (i < place.size() || j < number.size())
+                    if (tile->getType() == place[j] && tile->getNumber() == number[i])
+                    {
+                        matchingTiles.push_back(tile); // Add matching tile pointer to the vector
+                        j++;
+                        i++;
+                        break;
+                    }
+                    else
+                        break; // so it wont iterate everything again for nothing
+            }
         }
-
         return matchingTiles;
+    }
+    int Board::hasRobber() const
+    {
+        return this->robberPresent;
+    }
+
+    void Board::setRobber(int hasRobber)
+    {
+        robberPresent = hasRobber;
     }
     int Board::findNode(vector<Tile *> t)
     { // if he has only one then there is two node that can be found!
+        // so it will choose the one with no placement at all if there is both then he will take the second one
         if (t.size() == 1)
         {
+            int x = -1;
             vector<int> tile = t[1]->getNode();
             for (int i : tile)
             {
                 if (nodes[(size_t)i].getTile().size() == 1)
                     if (!nodes[(size_t)i].getHasCity() || !nodes[(size_t)i].getHasSettlement())
                         return i;
+                    else
+                        x = i;
             }
+            if (x != -1)
+                return x;
         }
         vector<int> firstNode = t[1]->getNode();
         vector<int> secendNode = t[2]->getNode();
@@ -214,11 +234,10 @@ namespace ariel
 
     int Board::findRoad(int n1, int n2) const
     {
-
         bool b = false;
         for (int i; i < roads.size(); i++)
         {
-            Road r = roads[i];
+            Road r = roads[(size_t)i];
             int r1 = r.getNode1()->getNumber();
             int r2 = r.getNode1()->getNumber();
             if ((r1 == n1 || r1 == n2) && (r1 == n1 || r1 == n2))
@@ -226,8 +245,8 @@ namespace ariel
                 b = true;
                 return i;
             }
-            return -1;
         }
+        return -1;
     }
 
     PlacementError Board::ValidateSettlement(int node, const Player &player) const
@@ -238,12 +257,12 @@ namespace ariel
             return PlacementError::INVALID_NODE;
         }
         // check for occupied
-        if (nodes[node].getHasSettlement() || nodes[node].getHasCity())
+        if (nodes[(size_t)node].getHasSettlement() || nodes[(size_t)node].getHasCity())
         {
             return PlacementError::NODE_OCCUPIED;
         }
         // check for Adjacent Settlement
-        vector<Node> n1 = nodes[node].getConnectNode();
+        vector<Node> n1 = nodes[(size_t)node].getConnectNode();
         for (Node node : n1)
         {
             if (node.getHasSettlement())
@@ -251,12 +270,12 @@ namespace ariel
         }
         // Check for road connection
         bool b = false;
-        vector<Node> n2 = nodes[node].getConnectNode();
+        vector<Node> n2 = nodes[(size_t)node].getConnectNode();
         for (Node n : n2)
         {
             int s = findRoad(n.getNumber(), node);
             if (s != -1)
-                if (*roads[s].getOwner() == player)
+                if (*roads[(size_t)s].getOwner() == player)
                     b = true;
         }
         if (!b)
@@ -277,12 +296,12 @@ namespace ariel
             return PlacementError::INVALID_NODE;
         }
         // check for occupied
-        if (nodes[node].getHasCity())
+        if (nodes[(size_t)node].getHasCity())
         {
             return PlacementError::NODE_OCCUPIED;
         }
         // check for not occupied by settlement
-        if (!nodes[node].getHasSettlement())
+        if (!nodes[(size_t)node].getHasSettlement())
         {
             return PlacementError::NODE_OCCUPIED_NOT_BY_SETTLEMENT;
         }
@@ -372,36 +391,41 @@ namespace ariel
         }
 
         // check if there is road connect of the same player by checking
-        Road r = Road(nodes[node1], nodes[node2], player);
+        Road r = Road(nodes[(size_t)node1], nodes[(size_t)node2], player);
         roads.push_back(r);
         return true;
     }
-    void Board::moveRobber(int tileNumber)
-    {
-        if (numberRobberTile == -1)
-            tiles[(size_t)tileNumber]->setRobber(true);
-        else{
-            tiles[(size_t)numberRobberTile]->setRobber(false);
-            tiles[(size_t)tileNumber]->setRobber(false);
-        }
-    }
+    // void Board::moveRobber(int tileNumber)
+    // {
+    //     if (this->robberPresent == -1)
+    //         setRobber(tileNumber);
+    //     else
+    //     {
+    //         // tiles[(size_t)numberRobberTile]->setRobber(false);
+    //         // tiles[(size_t)tileNumber]->setRobber(false);
+    //     }
+    // }
     void Board::giveResourceByDice(int dice)
     {
         // for(Node n:nodes){
 
         // }
-        for(Tile *t:tiles){
-            if(t->getNumber()==dice)
-            if(!t->hasRobber()){
-                vector<int> c = t->getNode();
-                for(int i:c){
-                    if(nodes[(size_t)i].getHasSettlement())
-                    nodes[(size_t)i].getOwner()->addResource(1,t->getResource());
-                    if(nodes[(size_t)i].getHasCity())
-                    nodes[(size_t)i].getOwner()->addResource(1,t->getResource());
+        for (Tile *t : tiles)
+        {
+            if (t->getNumber() == dice)
+                if (t->getNumber()!=robberPresent)
+                {
+                    vector<int> c = t->getNode();
+                    for (int i : c)
+                    {
+                        if (nodes[(size_t)i].getHasSettlement())
+                            nodes[(size_t)i].getOwner()->addResource(1, t->getResource());
+                        if (nodes[(size_t)i].getHasCity())
+                            nodes[(size_t)i].getOwner()->addResource(1, t->getResource());
+                    }
                 }
-            }
-        }
+        }`
+        
     }
     // std::shared_ptr<Piece> Board::getPieceAtNode(int node)
     // {

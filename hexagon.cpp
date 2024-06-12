@@ -77,12 +77,6 @@ namespace ariel
     {
         this->owner = &p;
     }
-    // void Node::setConnectNodeByRoads(Node node)
-    // {
-    //     for (Node n : getConnectNode())
-    //         if (n.getNumber() == node.getNumber())
-    //             this->connectNodeByRoads.push_back(node);
-    // }
     void Node::setConnectNode(vector<Node> node)
     {
         this->connectNode = node;
