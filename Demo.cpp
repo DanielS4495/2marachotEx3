@@ -8,7 +8,7 @@
 #include "catan.hpp"
 #include "player.hpp"
 #include "board.hpp"
-#include "piece.hpp"
+// #include "piece.hpp"
 using namespace std;
 using namespace ariel;
 
@@ -26,11 +26,11 @@ int main()
     Board &board = catan.getBoard();
     // ariel::Board& board = catan.getBoard(); // get the board of the game.
     vector<string> places = {"Forest", "Hills"};
-    vector<int> placesNum = {5, 6};
+    vector<int> placesNum = {3, 5};
     p1.placeSettelemnt(places, placesNum);
     p1.placeRoad(places, placesNum);
     places = {"Agricultural Land", "Desert"};
-    placesNum = {3, 4};
+    placesNum = {4, 0};
     p1.placeSettelemnt(places, placesNum);
     p1.placeRoad(places, placesNum); // p1 chooses Forest, hills, Agricultural Land, Desert with numbers 5, 6, 3, 4.
 
@@ -91,6 +91,6 @@ int main()
     p1.printPoints(); // p1 has 2 points because it has two settelments.
     p2.printPoints(); // p2 has 3 points because it has two settelments and a bonus points card.
     p3.printPoints(); // p3 has 2 points because it has two settelments.
-
+    // board.printBoard();
     catan.printWinner(); // Should print None because no player reached 10 points.
 }

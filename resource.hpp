@@ -111,11 +111,11 @@ namespace ariel
         BRICK,
         SHEEP,
         WHEAT,
-        ORE
+        IRON
     };
 
     ResourceType getResourceTypeFromString(const std::string &resource);
-    extern std::unordered_map<std::string, ResourceType> stringToResource;
+    // extern std::unordered_map<std::string, ResourceType> stringToResource;
 
     class Resource
     {
@@ -148,10 +148,10 @@ namespace ariel
         std::string getType() const override { return "Wheat"; }
     };
 
-    class Ore : public Resource
+    class Iron : public Resource
     {
     public:
-        std::string getType() const override { return "Ore"; }
+        std::string getType() const override { return "Iron"; }
     };
 
     std::shared_ptr<ariel::Resource> createResource(ResourceType type);

@@ -145,6 +145,21 @@ namespace ariel
         nodes[id++].setConnectNode(nodes[52], nodes[54]);
         nodes[id++].setConnectNode(nodes[46], nodes[53]);
     }
+    Board::~Board() // need to delete the board and all the tile
+    {
+        for (Tile *tile : tiles)
+        {
+            delete tile;
+        }
+    }
+    std::shared_ptr<Board> Board::getInstance()
+    {
+        if (!instance)
+        {
+            instance = std::shared_ptr<Board>(new Board());
+        }
+        return instance;
+    }
     vector<Tile *> Board::findTiles(vector<string> place, vector<int> number)
     {
         vector<Tile *> matchingTiles; // Stores found tiles
@@ -154,17 +169,18 @@ namespace ariel
         {
             for (Tile *tile : tiles)
             {
-                // Check if place and number match (assuming tile has attributes for place and number)
                 if (i < place.size() || j < number.size())
-                    if (tile->getType() == place[j] && tile->getNumber() == number[i])
+                { // Check if place and number match
+                    if (tile->getType() == place[i] && tile->getNumber() == number[j])
                     {
                         matchingTiles.push_back(tile); // Add matching tile pointer to the vector
                         j++;
                         i++;
                         break;
                     }
-                    else
-                        break; // so it wont iterate everything again for nothing
+                }
+                else
+                    break; // so it wont iterate everything again for nothing
             }
         }
         return matchingTiles;
@@ -173,10 +189,9 @@ namespace ariel
     {
         return this->robberPresent;
     }
-
     void Board::setRobber(int hasRobber)
     {
-        robberPresent = hasRobber;
+        this->robberPresent = hasRobber;
     }
     int Board::findNode(vector<Tile *> t)
     { // if he has only one then there is two node that can be found!
@@ -188,10 +203,12 @@ namespace ariel
             for (int i : tile)
             {
                 if (nodes[(size_t)i].getTile().size() == 1)
+                {
                     if (!nodes[(size_t)i].getHasCity() || !nodes[(size_t)i].getHasSettlement())
                         return i;
                     else
                         x = i;
+                }
             }
             if (x != -1)
                 return x;
@@ -231,7 +248,27 @@ namespace ariel
         }
         return -1;
     }
+    int Board::findOtherNodeOfRoad(int node, Player &player)
+    {
+        if (node == -1)
+            return -1;
+        vector<Node> vecNode = nodes[(size_t)node].getConnectNode();
+        for (Road r : roads)
+        {
+            if (r.getOwner() == &player)
+            {
+                for (Node n : vecNode)
+                {
+                    if (r.getNode1()->getNumber() == n.getNumber()) // found the node that i can connect using road
+                        return r.getNode1()->getNumber();
 
+                    if (r.getNode2()->getNumber() == n.getNumber()) // found the node that i can connect using road
+                        return r.getNode2()->getNumber();
+                }
+            }
+        }
+        return -1;
+    }
     int Board::findRoad(int n1, int n2) const
     {
         bool b = false;
@@ -248,7 +285,6 @@ namespace ariel
         }
         return -1;
     }
-
     PlacementError Board::ValidateSettlement(int node, const Player &player) const
     {
         // check for invalid node
@@ -313,7 +349,6 @@ namespace ariel
         // can be implement city
         return PlacementError::SUCCESS;
     }
-
     PlacementError Board::ValidateRoad(int node1, int node2, const Player &player) const
     {
         // check for invalid node
@@ -334,21 +369,6 @@ namespace ariel
         // can be implement road
         return PlacementError::SUCCESS;
     }
-    std::shared_ptr<Board> Board::getInstance()
-    {
-        if (!instance)
-        {
-            instance = std::shared_ptr<Board>(new Board());
-        }
-        return instance;
-    }
-    Board::~Board() // need to delete the board and all the node and the tile
-    {
-        for (Tile *tile : tiles)
-        {
-            delete tile;
-        }
-    }
     bool Board::placeSettlement(int node, Player &player)
     {
         // Validate placement and handle potential errors (implement based on game rules)
@@ -367,7 +387,6 @@ namespace ariel
         nodes[(size_t)node].setOwner(player);
         return true;
     }
-
     bool Board::placeCity(int node, Player &player)
     {
         PlacementError error = ValidateCity(node, player);
@@ -380,7 +399,6 @@ namespace ariel
         nodes[(size_t)node].setHasCity(true);
         return true;
     }
-
     bool Board::placeRoad(int node1, int node2, Player &player)
     {
         PlacementError error = ValidateRoad(node1, node2, player);
@@ -395,99 +413,56 @@ namespace ariel
         roads.push_back(r);
         return true;
     }
-    // void Board::moveRobber(int tileNumber)
-    // {
-    //     if (this->robberPresent == -1)
-    //         setRobber(tileNumber);
-    //     else
-    //     {
-    //         // tiles[(size_t)numberRobberTile]->setRobber(false);
-    //         // tiles[(size_t)tileNumber]->setRobber(false);
-    //     }
-    // }
-    void Board::giveResourceByDice(int dice)
+    void Board::giveResourceByDice(int dice, int moverobber)
     {
-        // for(Node n:nodes){
-
-        // }
-        for (Tile *t : tiles)
-        {
-            if (t->getNumber() == dice)
-                if (t->getNumber()!=robberPresent)
-                {
-                    vector<int> c = t->getNode();
-                    for (int i : c)
+        std::cout << "Rolled: " << dice << std::endl;
+        if (dice != 7)
+            for (Tile *t : tiles)
+            {
+                if (t->getNumber() == dice)
+                    if (t->getNumber() != robberPresent)
                     {
-                        if (nodes[(size_t)i].getHasSettlement())
-                            nodes[(size_t)i].getOwner()->addResource(1, t->getResource());
-                        if (nodes[(size_t)i].getHasCity())
-                            nodes[(size_t)i].getOwner()->addResource(1, t->getResource());
+                        vector<int> c = t->getNode();
+                        for (int i : c)
+                        {
+                            if (nodes[(size_t)i].getHasSettlement())
+                                nodes[(size_t)i].getOwner()->addResource(1, t->getResource().get()->getType());
+                            if (nodes[(size_t)i].getHasCity())
+                                nodes[(size_t)i].getOwner()->addResource(1, t->getResource().get()->getType());
+                        }
                     }
-                }
-        }`
-        
+            }
+        else
+        {
+            // need to take half of the card from players that have more than 7 card
+            if(moverobber>0&&moverobber<20)
+            setRobber(moverobber);
+        }
     }
-    // std::shared_ptr<Piece> Board::getPieceAtNode(int node)
-    // {
-    //     return std::shared_ptr<Piece>();
-    // }
-    // void Board::removePieceAtNode(int node)
-    // {
-    // }
+    void Board::printBoard() const
+    {
+        int count = 0;
+        for (Tile *tile : tiles)
+        {
+            count++;
 
-    // void Board::placePieceAtNode(int node, std::shared_ptr<Piece> piece)
-    // {
-    // }
-
-    // vonumber Board::printBoard() const
-    // {
-    //     for (const auto &tile : &tiles)
-    //     {
-    //         std::cout << tile.second.get().getType() << " (" << tile.getNumber() << ") ";
-    //         if (tile->getResource()->getType() != "None")
-    //         {
-    //             std::cout << "- Resource: " << tile->getResource()->getType();
-    //         }
-    //         std::cout << std::endl;
-    //     }
-    // }
-    // vonumber Board::moveRobber(int tileNumber)
-    // {
-    //     for (const auto &tile : &tiles)
-    //     {
-    //         if (tile->getNumber() == tileNumber)
-    //         {
-    //             robber.moveTo(tile.get());
-    //             tile->placeRobber(true);
-    //         }
-    //         else
-    //         {
-    //             tile->placeRobber(false);
-    //         }
-    //     }
-    // }
-    // std::shared_ptr<Tile> Board::getTile(int tileNumber) const
-    // {
-    //     for (const auto &tile : &tiles)
-    //     {
-    //         if (tile->getNumber() == tileNumber)
-    //         {
-    //             return tile;
-    //         }
-    //     }
-    //     return nullptr; // If tile not found
-    // }
+            std::cout << tile->getType() << " (" << tile->getNumber() << ") ";
+            // if (tile->getType() != "Desert")
+            //     std::cout << " " << tile->getResource()->getType() << " ";
+            if (count == 3 || count == 7 || count == 12 || count == 16 || count == 19)
+                std::cout << std::endl;
+        }
+    }
     // void Board::printBoard() const
     // {
     //     const int resourceSpace = 3; // Adjust spacing for resource type symbol
-
+    //     int BOARD_SIZE=5;
     //     // Top border for the board (optional)
     //     for (int x = 0; x < BOARD_SIZE * (resourceSpace + 1) + 1; ++x)
     //     {
     //         std::cout << "-";
     //     }
     //     std::cout << std::endl;
-
     //     for (int y = 0; y < BOARD_SIZE; ++y)
     //     {
     //         for (int x = 0; x < BOARD_SIZE; ++x)
@@ -506,11 +481,9 @@ namespace ariel
     //                 // Print resource type symbol for the hexagon
     //                 std::cout << board[y][x].resourceType;
     //             }
-
     //             // Add spacing between resource types
     //             std::cout << " ";
     //         }
-
     //         // Print settlement information for the row (adjust logic for your layout)
     //         for (int x = 0; x < BOARD_SIZE; ++x)
     //         {
@@ -529,7 +502,6 @@ namespace ariel
     //         }
     //         std::cout << std::endl;
     //     }
-
     //     // Bottom border for the board (optional)
     //     for (int x = 0; x < BOARD_SIZE * (resourceSpace + 1) + 1; ++x)
     //     {

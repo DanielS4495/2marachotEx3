@@ -26,6 +26,7 @@ namespace ariel
         bool roadCard;
         bool hisTurn=false;
         bool hasBuildThisTurn=false;
+        int countNumOfTurn=0; //count the number of turn so we will know for the two first round
         // Board& board = *boardPtr; // Dereference the shared pointer
         int countCity=0;
         int countSettlements=0;

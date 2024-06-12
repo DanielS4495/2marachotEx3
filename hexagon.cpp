@@ -6,8 +6,8 @@ namespace ariel
     {
         this->number = number;
         this->tile = tile;
-        this->hasSettlement = NULL;
-        this->hasCity = NULL;
+        this->hasSettlement = false;
+        this->hasCity = false;
         this->owner = NULL;
     }
     Node::Node(int number, Tile *tile)

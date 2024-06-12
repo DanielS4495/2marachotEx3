@@ -12,21 +12,20 @@ namespace ariel
     //     board = Board::getInstance();
     //     chooseStartingPlayer();
     // }
-
+    //
     // // Board &Catan::getBoard()
     // // {
     // //     return board;
     // // }
-
+    //
     // std::shared_ptr<Board> Catan::getBoard() const {
     //     return board;
     // }
     Catan::Catan(const std::vector<Player> &players) : players(players), ifBuild(false), board(std::make_shared<Board>())
     {
-        chooseStartingPlayer(); // Assuming this doesn't call getBoard
+        chooseStartingPlayer();
         giveResourceStart();
     }
-
     Board &Catan::getBoard()
     {
         if (!board)
@@ -53,17 +52,17 @@ namespace ariel
     {
         return this->currentPlayer;
     }
-    // void Catan::start() // do two rounds of place settlement and roads
-    // {
-    //     giveResourceStart();
-    //     // Game starting logic
-    // }
+    void Catan::start() // do two rounds of place settlement and roads
+    {
+        giveResourceStart();
+        
+        // Game starting logic
+    }
 
     // void Catan::playTurn()
     // {
     //     // Player *currentPlayer = getCurrentPlayer();
     //     std::cout << currentPlayer->getName() << "'s turn." << std::endl;
-
     //     int rollResult = rollDice();
     //     std::cout << "Rolled: " << rollResult << std::endl;
     //     if (rollResult == 7)
@@ -73,7 +72,7 @@ namespace ariel
     //             while (p.countResources() > 7)
     //             {
     //                 cout << p.getName() << ": what resource do you want to return?" << endl;
-    //                 cout << "choose from: WOOD/BRICK/SHEEP/WHEAT/ORE" << endl; // put resource type
+    //                 cout << "choose from: WOOD/BRICK/SHEEP/WHEAT/IRON" << endl; // put resource type
     //                 string res;
     //                 cin<<res<<endl;
     //                 int count=p.getResourceCount(res);
@@ -87,7 +86,6 @@ namespace ariel
     //     {
     //         board.get()->giveResourceByDice(rollResult);
     //     }
-
     //     // string resource="";
     //     // for (const auto &player : players){ //go over all player
     //     //     bool robber(Tile::hasRobber()); //check if there is robber
@@ -97,8 +95,6 @@ namespace ariel
     //     //     player.addResource(resource); //give player serource
     //     //     }
     //     // }
-
-
     //     // bool exit = true;
     //     // string resource = "";
     //     // while (exit)
@@ -110,24 +106,17 @@ namespace ariel
     //     //     std::cout << "3. End Turn: type e" << std::endl;
     //     //     cin<<s<<endl;
     //     //     if(s=="S"){
-
     //     //     }
     //     //     if(s=="C"){
-                
     //     //     }
     //     // }
-
-
     //     // Distribute resources based on the roll result
     //     // Implement trading and building logic
-
     //     setIfBuild(true); // when the player build he cant trade
-
     //     // Move to the next player
     //     // turnIndex = (turnIndex + 1) % players.size(); //do i need this?
     //     nextPlayer(); // i need to do first end turn
     // }
-
     void Catan::nextPlayer()
     {
         setIfBuild(false);
@@ -136,7 +125,6 @@ namespace ariel
         currentPlayer = &players[currentPlayerIndex];
         currentPlayer->startTurn();
     }
-
     bool Catan::checkVictory()
     {
         return currentPlayer->getVictoryPoints() >= 10;
@@ -158,22 +146,20 @@ namespace ariel
                 maxAge = players[i].getAge();
                 oldestPlayerIndex = i;
             }
-        } 
+        }
 
         std::cout << "Starting player is " << players[oldestPlayerIndex].getName() << std::endl;
         currentPlayerIndex = oldestPlayerIndex; // Assign the index of the oldest player
         currentPlayer = &players[currentPlayerIndex];
         currentPlayer->startTurn();
     }
-
     void Catan::setIfBuild(bool b)
     {
         ifBuild = b;
     }
-
     void Catan::printWinner()
     { // need to free all the space from everything
-        for (const auto &player : players)
+        for (Player player : players)
         {
             if (player.getVictoryPoints() >= 10)
             {
@@ -183,34 +169,27 @@ namespace ariel
         }
         std::cout << "None of the players reached 10 points yet." << std::endl;
     }
-
-    int Catan::rollDice() // what happend if its 7 ?
-    {
-        // Logic to roll the dice and distribute resources
-        int diceRoll = rand() % 6 + 1 + rand() % 6 + 1; // Simulate rolling two six-sided dice
-        return diceRoll;
-        // std::cout << "Dice roll: " << diceRoll << std::endl;
-        // Distribute resources based on the dice roll
-    }
     void Catan::giveResourceStart()
     {
-        ResourceType resourceType;
-        resourceType = getResourceTypeFromString("WOOD");
-        std::shared_ptr<Resource> res1 = createResource(resourceType);
-        resourceType = getResourceTypeFromString("SHEEP");
-        std::shared_ptr<Resource> res2 = createResource(resourceType);
-        resourceType = getResourceTypeFromString("WHEAT");
-        std::shared_ptr<Resource> res3 = createResource(resourceType);
-        resourceType = getResourceTypeFromString("ORE");
-        std::shared_ptr<Resource> res4 = createResource(resourceType);
-
-        for (Player p : players)
+        // ResourceType resourceType;
+        // resourceType = getResourceTypeFromString("WOOD");
+        // std::shared_ptr<Resource> res1 = createResource(resourceType);
+        // resourceType = getResourceTypeFromString("SHEEP");
+        // std::shared_ptr<Resource> res2 = createResource(resourceType);
+        // resourceType = getResourceTypeFromString("WHEAT");
+        // std::shared_ptr<Resource> res3 = createResource(resourceType);
+        // resourceType = getResourceTypeFromString("IRON");
+        // std::shared_ptr<Resource> res4 = createResource(resourceType);
+        if (ifstart)
         {
-            p.addResource(4, res1); // two roads two sett..
-            p.addResource(2, res2); // two sett..
-            p.addResource(2, res3); // two sett..
-            p.addResource(4, res4); // two roads two sett..
+            for (Player p : players)
+            {
+                p.addResource(4, "WOOD");  // two roads two sett..
+                p.addResource(2, "SHEEP"); // two sett..
+                p.addResource(2, "WHEAT"); // two sett..
+                p.addResource(4, "BRICK"); // two roads two sett..
+            }
+            ifstart = false;
         }
     }
-
 }

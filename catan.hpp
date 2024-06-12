@@ -7,7 +7,7 @@
 #include "player.hpp"
 #include "board.hpp"
 #include "tile.hpp"
-#include "piece.hpp"
+// #include "piece.hpp"
 using namespace std;
 namespace ariel
 {
@@ -20,6 +20,7 @@ namespace ariel
         Player *currentPlayer;
         size_t currentPlayerIndex;
         bool ifBuild;
+        bool ifstart=false;
         std::vector<std::shared_ptr<Tile>> tiles;
         // std::vector<std::shared_ptr<Piece>> settlements;
         // std::vector<std::shared_ptr<Piece>> roads;
@@ -37,18 +38,14 @@ namespace ariel
         static Catan &getInstance(const std::vector<Player> &players);
         Board &getBoard();
         Player *getCurrentPlayer() const;
-
         void start();
         void playTurn();
         void nextPlayer();
         bool checkVictory();
         bool checkBuild(); // check if the player build something so he cant trade
         void printWinner();
-        int rollDice(); // do i need this? player has it
         void giveResourceStart();
-        void finishTurn();
-
-        // Other member functions
+        // void finishTurn();
     };
 
 }

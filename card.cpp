@@ -117,7 +117,7 @@ namespace ariel
             --countcard;
     }
 
-    KnightCard::KnightCard() : Card(3) {}
+    KnightCard::KnightCard() : Card(14) {}
 
     std::string KnightCard::getType() const { return "Knight"; }
 
@@ -125,7 +125,7 @@ namespace ariel
 
     std::string RoadBuilderCard::getType() const { return "Road Builder"; }
 
-    MonopolyCard::MonopolyCard() : Card(1) {}
+    MonopolyCard::MonopolyCard() : Card(2) {}
 
     std::string MonopolyCard::getType() const { return "Monopoly"; }
 
@@ -133,7 +133,7 @@ namespace ariel
 
     std::string YearOfPlentyCard::getType() const { return "Year Of Plenty"; }
 
-    VictoryPointCard::VictoryPointCard() : Card(1) {}
+    VictoryPointCard::VictoryPointCard() : Card(5) {}
 
     std::string VictoryPointCard::getType() const { return "Victory Point"; }
 

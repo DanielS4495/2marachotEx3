@@ -10,7 +10,7 @@ namespace ariel
             {"BRICK", BRICK},
             {"SHEEP", SHEEP},
             {"WHEAT", WHEAT},
-            {"ORE", ORE}};
+            {"IRON", IRON}};
 
         auto it = resourceMap.find(resource);
         if (it != resourceMap.end())
@@ -23,12 +23,12 @@ namespace ariel
         }
     }
 
-    // std::unordered_map<std::string, ResourceType> stringToResource = {
+    // std::unordered_map<std::string, ResourceType> stringTIRONsource = {
     //     {"WOOD", ResourceType::WOOD},
     //     {"BRICK", ResourceType::BRICK},
     //     {"SHEEP", ResourceType::SHEEP},
     //     {"WHEAT", ResourceType::WHEAT},
-    //     {"ORE", ResourceType::ORE}};
+    //     {"IRON", ResourceType::IRON}};
 
     std::shared_ptr<Resource> createResource(ResourceType type)
     {
@@ -42,8 +42,8 @@ namespace ariel
             return std::static_pointer_cast<Resource>(std::make_shared<Sheep>());
         case WHEAT:
             return std::static_pointer_cast<Resource>(std::make_shared<Wheat>());
-        case ORE:
-            return std::static_pointer_cast<Resource>(std::make_shared<Ore>());
+        case IRON:
+            return std::static_pointer_cast<Resource>(std::make_shared<Iron>());
         default:
             throw std::invalid_argument("Invalid Resource type");
         }

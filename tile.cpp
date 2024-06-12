@@ -67,7 +67,7 @@ namespace ariel
         std::vector<int> node; // connected node number
 
     public:
-        MountainsTile(int num, std::vector<int> node) : resource(std::make_shared<Ore>()), number(num), node(node) {}
+        MountainsTile(int num, std::vector<int> node) : resource(std::make_shared<Iron>()), number(num), node(node) {}
         std::string getType() const override { return "Mountains"; }
         std::shared_ptr<Resource> getResource() const override { return resource; }
         int getNumber() const override { return number; }
@@ -80,8 +80,8 @@ namespace ariel
         std::vector<int> node; // connected node number
 
     public:
-        DesertTile(int num, std::vector<int> node) : resource(NULL), number(num), node(node) {}
-        std::string getType() const override { return "Mountains"; }
+        DesertTile(int num, std::vector<int> node) : resource(nullptr), number(0), node(node) {}
+        std::string getType() const override { return "Desert"; }
         std::shared_ptr<Resource> getResource() const override { return resource; }
         int getNumber() const override { return number; }
         vector<int> getNode() const override { return node; }
