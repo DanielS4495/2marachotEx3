@@ -14,13 +14,13 @@ namespace ariel
     class Catan
     {
     private:
-        std::vector<Player> players;
+        std::vector<Player *> players;
         // Board &board;
         std::shared_ptr<Board> board;
         Player *currentPlayer;
         size_t currentPlayerIndex;
         bool ifBuild;
-        bool ifstart=false;
+        bool ifstart=true;
         std::vector<std::shared_ptr<Tile>> tiles;
         // std::vector<std::shared_ptr<Piece>> settlements;
         // std::vector<std::shared_ptr<Piece>> roads;
@@ -31,11 +31,11 @@ namespace ariel
         // void initializeBoard();
 
     public:
-        Catan(const std::vector<Player> &players);
+        Catan(const std::vector<Player *> &players);
         Catan(const Catan &) = delete;
         void operator=(const Catan &) = delete;
         // std::shared_ptr<Board> getBoard() const;
-        static Catan &getInstance(const std::vector<Player> &players);
+        static Catan &getInstance(const std::vector<Player *> &players);
         Board &getBoard();
         Player *getCurrentPlayer() const;
         void start();

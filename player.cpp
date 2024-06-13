@@ -135,26 +135,35 @@ namespace ariel
 
     void Player::rollDice()
     {
-        if (this->hisTurn)
+        try
         {
-            int dice = rand() % 12 + 1;
-            int robber = 0;
-            while (robber == 0 && dice == 7)
+            if (this->hisTurn)
             {
-                try
+                int dice = rand() % 12 + 1;
+                int robber = 0;
+                while (robber == 0 && dice == 7)
                 {
-                    cout << "enter number betwween 1 to 19 to put in the tile that the robber will be there:" << endl;
-                    cin >> robber;
-                    if (robber > 20 && robber < 1)
-                        throw std::invalid_argument("Not Between 1 to 19 try again");
+                    try
+                    {
+                        cout << "enter number betwween 1 to 19 to put in the tile that the robber will be there:" << endl;
+                        cin >> robber;
+                        if (robber > 20 && robber < 1)
+                            throw std::invalid_argument("Not Between 1 to 19 try again");
+                    }
+                    catch (const std::exception &e)
+                    {
+                        robber = 0;
+                        cout << e.what() << endl;
+                    }
                 }
-                catch (const std::exception &e)
-                {
-                    robber = 0;
-                    cout << e.what() << endl;
-                }
+                board->giveResourceByDice(dice, robber);
             }
-            board->giveResourceByDice(dice, robber);
+            else
+                throw std::invalid_argument("Not the player turn");
+        }
+        catch (const std::exception &e)
+        {
+            cout << e.what() << endl;
         }
     }
     void Player::endTurn()
@@ -176,16 +185,44 @@ namespace ariel
     {
         return this->hasBuildThisTurn;
     }
-    // first need to check if they have this resource
+    // need to check the resource if valid
     void Player::trade(Player &other, const std::string &giveResource, const std::string &getResource, int giveAmount, int getAmount)
     {
-        if (getHasBuild())
+        try
         {
-            if (giveAmount > 0 && getAmount > 0)
-                if (this->getResourceCount(giveResource) > giveAmount && other.getResourceCount(getResource) > getAmount)
-                    this->removeResource(giveAmount, giveResource);
-            this->addResource(getAmount, getResource);
-            other.removeResource(getAmount, getResource);
+            if (this->hisTurn)
+            {
+                if (!getHasBuild())
+                {
+                    if (giveAmount > 0 && getAmount > 0)
+                    {
+                        //check if both the resource are valid
+                        // ResourceType resourceType1 = getResourceTypeFromString(getResource);
+                        // std::shared_ptr<Resource> res = createResource(resourceType1);
+                        // ResourceType resourceType2 = getResourceTypeFromString(giveResource);
+                        // std::shared_ptr<Resource> res = createResource(resourceType2);
+                        //check both the amount
+                        if (this->getResourceCount(giveResource) > giveAmount && other.getResourceCount(getResource) > getAmount)
+                        {
+                            this->removeResource(giveAmount, giveResource);
+                            this->addResource(getAmount, getResource);
+                            other.removeResource(getAmount, getResource);
+                        }
+                        else
+                            throw std::invalid_argument("one of the player doesnt have the amount of resource to give");
+                    }
+                    else
+                        throw std::invalid_argument("the amount of the give or get resource need to be more than 0");
+                }
+                else
+                    throw std::invalid_argument("the player has already build so he cant trade");
+            }
+            else
+                throw std::invalid_argument("Not the player turn");
+        }
+        catch (const std::exception &e)
+        {
+            cout << e.what() << endl;
         }
     }
     void Player::buyDevelopmentCard()
@@ -201,6 +238,7 @@ namespace ariel
                     int random = rand() % 5 + 1;
                     CardType c = CardType(random);
                     std::shared_ptr<Card> card = createCard(c);
+                    cout << "the player:" << this->getName() << "got this card:" << card.get()->getType() << endl;
                     development[card]++;
                 }
                 else

@@ -107,10 +107,12 @@ namespace ariel
         }
     }
 
+
+    //need to do it in every class not in the card class
+
+
     Card::Card(int count) : countcard(count) {}
-
     int Card::getHowMuchLeft() const { return countcard; }
-
     void Card::reduceCard()
     {
         if (countcard > 0)

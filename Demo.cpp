@@ -14,10 +14,15 @@ using namespace ariel;
 
 int main()
 {
+    // int x;
+    // std::cin >> x;
     Player p1("Amit", 9);
     Player p2("Yossi", 6);
     Player p3("Dana", 3);
-    vector<Player> players = {p1, p2, p3};
+    Player *pp1 =&p1;
+    Player *pp2 =&p2;
+    Player *pp3 =&p3;
+    vector<Player *> players = {pp1, pp2, pp3};
     // Catan catan(players);
     Catan &catan = Catan::getInstance(players);
     // Starting of the game. Every player places two settlements and two roads.

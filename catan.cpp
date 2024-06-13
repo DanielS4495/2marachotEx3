@@ -21,7 +21,7 @@ namespace ariel
     // std::shared_ptr<Board> Catan::getBoard() const {
     //     return board;
     // }
-    Catan::Catan(const std::vector<Player> &players) : players(players), ifBuild(false), board(std::make_shared<Board>())
+    Catan::Catan(const std::vector<Player *> &players) : players(players), ifBuild(false), board(std::make_shared<Board>())
     {
         chooseStartingPlayer();
         giveResourceStart();
@@ -34,7 +34,7 @@ namespace ariel
         }
         return *board;
     }
-    Catan &Catan::getInstance(const std::vector<Player> &players)
+    Catan &Catan::getInstance(const std::vector<Player *> &players)
     {
         // // static Catan instance(players);
         // // board = Board::getInstance();
@@ -55,7 +55,7 @@ namespace ariel
     void Catan::start() // do two rounds of place settlement and roads
     {
         giveResourceStart();
-        
+
         // Game starting logic
     }
 
@@ -122,7 +122,7 @@ namespace ariel
         setIfBuild(false);
         currentPlayer->endTurn();
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-        currentPlayer = &players[currentPlayerIndex];
+        currentPlayer = players[currentPlayerIndex];
         currentPlayer->startTurn();
     }
     bool Catan::checkVictory()
@@ -141,16 +141,16 @@ namespace ariel
 
         for (size_t i = 0; i < players.size(); ++i)
         {
-            if (maxAge < players[i].getAge())
+            if (maxAge < players[i]->getAge())
             {
-                maxAge = players[i].getAge();
+                maxAge = players[i]->getAge();
                 oldestPlayerIndex = i;
             }
         }
 
-        std::cout << "Starting player is " << players[oldestPlayerIndex].getName() << std::endl;
+        std::cout << "Starting player is " << players[oldestPlayerIndex]->getName() << std::endl;
         currentPlayerIndex = oldestPlayerIndex; // Assign the index of the oldest player
-        currentPlayer = &players[currentPlayerIndex];
+        currentPlayer = players[currentPlayerIndex];
         currentPlayer->startTurn();
     }
     void Catan::setIfBuild(bool b)
@@ -159,11 +159,11 @@ namespace ariel
     }
     void Catan::printWinner()
     { // need to free all the space from everything
-        for (Player player : players)
+        for (Player *player : players)
         {
-            if (player.getVictoryPoints() >= 10)
+            if (player->getVictoryPoints() >= 10)
             {
-                std::cout << player.getName() << " wins the game!" << std::endl;
+                std::cout << player->getName() << " wins the game!" << std::endl;
                 return;
             }
         }
@@ -182,12 +182,12 @@ namespace ariel
         // std::shared_ptr<Resource> res4 = createResource(resourceType);
         if (ifstart)
         {
-            for (Player p : players)
+            for (Player *p : players)
             {
-                p.addResource(4, "WOOD");  // two roads two sett..
-                p.addResource(2, "SHEEP"); // two sett..
-                p.addResource(2, "WHEAT"); // two sett..
-                p.addResource(4, "BRICK"); // two roads two sett..
+                p->addResource(4, "WOOD");  // two roads two sett..
+                p->addResource(2, "SHEEP"); // two sett..
+                p->addResource(2, "WHEAT"); // two sett..
+                p->addResource(4, "BRICK"); // two roads two sett..
             }
             ifstart = false;
         }
