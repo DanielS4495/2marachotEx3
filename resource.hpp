@@ -116,43 +116,43 @@ namespace ariel
 
     ResourceType getResourceTypeFromString(const std::string &resource);
     // extern std::unordered_map<std::string, ResourceType> stringToResource;
-
-    class Resource
-    {
-    public:
-        virtual ~Resource() = default;
-        virtual std::string getType() const = 0;
-    };
-
-    class Wood : public Resource
-    {
-    public:
-        std::string getType() const override { return "Wood"; }
-    };
-
-    class Brick : public Resource
-    {
-    public:
-        std::string getType() const override { return "Brick"; }
-    };
-
-    class Sheep : public Resource
-    {
-    public:
-        std::string getType() const override { return "Sheep"; }
-    };
-
-    class Wheat : public Resource
-    {
-    public:
-        std::string getType() const override { return "Wheat"; }
-    };
-
-    class Iron : public Resource
-    {
-    public:
-        std::string getType() const override { return "Iron"; }
-    };
-
-    std::shared_ptr<ariel::Resource> createResource(ResourceType type);
 }
+//     class Resource
+//     {
+//     public:
+//         virtual ~Resource() = default;
+//         virtual std::string getType() const = 0;
+//     };
+
+//     class Wood : public Resource
+//     {
+//     public:
+//         std::string getType() const override { return "Wood"; }
+//     };
+
+//     class Brick : public Resource
+//     {
+//     public:
+//         std::string getType() const override { return "Brick"; }
+//     };
+
+//     class Sheep : public Resource
+//     {
+//     public:
+//         std::string getType() const override { return "Sheep"; }
+//     };
+
+//     class Wheat : public Resource
+//     {
+//     public:
+//         std::string getType() const override { return "Wheat"; }
+//     };
+
+//     class Iron : public Resource
+//     {
+//     public:
+//         std::string getType() const override { return "Iron"; }
+//     };
+
+//     std::shared_ptr<ariel::Resource> createResource(ResourceType type);
+// }

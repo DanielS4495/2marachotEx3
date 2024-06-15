@@ -6,83 +6,83 @@ namespace ariel
    
     class ForestTile : public Tile
     {
-        std::shared_ptr<Resource> resource;
+        std::string resource;
         int number;
         std::vector<int> node; // connected node number
 
     public:
-        ForestTile(int num, std::vector<int> node) : resource(std::make_shared<Wood>()), number(num), node(node) {}
+        ForestTile(int num, std::vector<int> node) : resource("WOOD"), number(num), node(node) {}
         std::string getType() const override { return "Forest"; }
-        std::shared_ptr<Resource> getResource() const override { return resource; }
+        std::string getResource() const override { return resource; }
         int getNumber() const override { return number; }
         vector<int> getNode() const override { return node; }
     };
 
     class HillsTile : public Tile
     {
-        std::shared_ptr<Resource> resource;
+        std::string resource;
         int number;
         std::vector<int> node; // connected node number
 
     public:
-        HillsTile(int num, std::vector<int> node) : resource(std::make_shared<Brick>()), number(num), node(node) {}
+        HillsTile(int num, std::vector<int> node) : resource("BRICK"), number(num), node(node) {}
         std::string getType() const override { return "Hills"; }
-        std::shared_ptr<Resource> getResource() const override { return resource; }
+        std::string getResource() const override { return resource; }
         int getNumber() const override { return number; }
         vector<int> getNode() const override { return node; }
     };
 
     class PastureTile : public Tile
     {
-        std::shared_ptr<Resource> resource;
+        std::string resource;
         int number;
         std::vector<int> node; // connected node number
 
     public:
-        PastureTile(int num, std::vector<int> node) : resource(std::make_shared<Sheep>()), number(num), node(node) {}
+        PastureTile(int num, std::vector<int> node) : resource("SHEEP"), number(num), node(node) {}
         std::string getType() const override { return "Pasture Land"; }
-        std::shared_ptr<Resource> getResource() const override { return resource; }
+        std::string getResource() const override { return resource; }
         int getNumber() const override { return number; }
         vector<int> getNode() const override { return node; }
     };
 
     class AgriculturalTile : public Tile
     {
-        std::shared_ptr<Resource> resource;
+        std::string resource;
         int number;
         std::vector<int> node; // connected node number
 
     public:
-        AgriculturalTile(int num, std::vector<int> node) : resource(std::make_shared<Wheat>()), number(num), node(node) {}
+        AgriculturalTile(int num, std::vector<int> node) : resource("WHEAT"), number(num), node(node) {}
         std::string getType() const override { return "Agricultural Land"; }
-        std::shared_ptr<Resource> getResource() const override { return resource; }
+        std::string getResource() const override { return resource; }
         int getNumber() const override { return number; }
         vector<int> getNode() const override { return node; }
     };
 
     class MountainsTile : public Tile
     {
-        std::shared_ptr<Resource> resource;
+        std::string resource;
         int number;
         std::vector<int> node; // connected node number
 
     public:
-        MountainsTile(int num, std::vector<int> node) : resource(std::make_shared<Iron>()), number(num), node(node) {}
+        MountainsTile(int num, std::vector<int> node) : resource("IRON"), number(num), node(node) {}
         std::string getType() const override { return "Mountains"; }
-        std::shared_ptr<Resource> getResource() const override { return resource; }
+        std::string getResource() const override { return resource; }
         int getNumber() const override { return number; }
         vector<int> getNode() const override { return node; }
     };
     class DesertTile : public Tile
     {
-        std::shared_ptr<Resource> resource;
+        std::string resource;
         int number;
         std::vector<int> node; // connected node number
 
     public:
-        DesertTile(int num, std::vector<int> node) : resource(nullptr), number(0), node(node) {}
+        DesertTile(int num, std::vector<int> node) : resource(""), number(0), node(node) {}
         std::string getType() const override { return "Desert"; }
-        std::shared_ptr<Resource> getResource() const override { return resource; }
+        std::string getResource() const override { return resource; }
         int getNumber() const override { return number; }
         vector<int> getNode() const override { return node; }
     };

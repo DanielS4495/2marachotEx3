@@ -30,20 +30,22 @@ namespace ariel
         int number;
         bool hasSettlement;
         bool hasCity;
-        Player *owner;
+        Player *owner=nullptr;
         vector<Node> connectNode;
         // vector<Node> connectNodeByRoads;
-        vector<Tile *> tile;
+        // vector<Tile *> tile;
+        // std::shared_ptr<Tile> tiles;
+        std::vector<std::shared_ptr<Tile>> tiles;
 
     public:
         ~Node() = default;
-        Node(int number, vector<Tile *> tile);
+        Node(int number,const std::vector<std::shared_ptr<Tile>> &tiles);
         // helper
-        Node(int number, Tile *tile);
-        Node(int number, Tile *tile1, Tile *tile2);
-        Node(int number, Tile *tile1, Tile *tile2, Tile *tile3);
+        // Node(int number, std::shared_ptr<Tile> tile);
+        // Node(int number, std::shared_ptr<Tile> tile1, std::shared_ptr<Tile> tile2);
+        // Node(int number, std::shared_ptr<Tile> tile1, std::shared_ptr<Tile> tile2, std::shared_ptr<Tile> tile3);
         // get
-        vector<Tile *> getTile() const;
+        std::vector<std::shared_ptr<Tile>> getTile() const;
         int getNumber() const;
         bool getHasSettlement() const;
         bool getHasCity() const;
@@ -51,15 +53,15 @@ namespace ariel
         vector<Node> getConnectNode() const;
         // vector<Node> getConnectNodeByRoads() const;
         // set
-        void setHasSettlement(bool has);
-        void setHasCity(bool has);
+        void setHasSettlement(bool has,Player &p);
+        void setHasCity(bool has,Player &p);
         void setOwner(Player &p);
         // void setConnectNodeByRoads(Node node);
         void setConnectNode(vector<Node> node);
         // helper
-        void setConnectNode(Node node);
-        void setConnectNode(Node node1, Node node2);
-        void setConnectNode(Node node1, Node node2, Node node3);
+        // void setConnectNode(Node node);
+        // void setConnectNode(Node node1, Node node2);
+        // void setConnectNode(Node node1, Node node2, Node node3);
     };
     class Road
     {

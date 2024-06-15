@@ -20,7 +20,7 @@ namespace ariel
         Player *currentPlayer;
         size_t currentPlayerIndex;
         bool ifBuild;
-        bool ifstart=true;
+        bool ifstart = false; // if the game started then its true
         std::vector<std::shared_ptr<Tile>> tiles;
         // std::vector<std::shared_ptr<Piece>> settlements;
         // std::vector<std::shared_ptr<Piece>> roads;
@@ -34,9 +34,10 @@ namespace ariel
         Catan(const std::vector<Player *> &players);
         Catan(const Catan &) = delete;
         void operator=(const Catan &) = delete;
+        // ~Catan();
         // std::shared_ptr<Board> getBoard() const;
         static Catan &getInstance(const std::vector<Player *> &players);
-        Board &getBoard();
+        // std::shared_ptr<Board> getBoard();
         Player *getCurrentPlayer() const;
         void start();
         void playTurn();

@@ -1,7 +1,7 @@
 #!make -f
 
-CXX=clang++
-CXXFLAGS=-std=c++11 -Werror -Wsign-conversion -pedantic -g
+CXX=g++
+CXXFLAGS=-std=c++14 -Werror -Wsign-conversion -pedantic -g
 VALGRIND_FLAGS=-v --leak-check=full --show-leak-kinds=all  --error-exitcode=99
 LDLIBS=-pthread
 
@@ -14,7 +14,7 @@ all: $(EXECUTABLES)
 run: catan
 	./$^
 
-# demo:  Graph.o Algorithms.o Demo.o
+# demo: $(OBJECTS) Demo.o
 # 	$(CXX) $(CXXFLAGS) $^ -o demo
 
 # MyTest:  Graph.o Algorithms.o MyTest.o
@@ -30,9 +30,9 @@ catan: $(OBJECTS) Demo.o
 tidy:
 	clang-tidy $(SOURCES) -checks=bugprone-*,clang-analyzer-*,cppcoreguidelines-*,performance-*,portability-*,readability-*,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-cppcoreguidelines-owning-memory --warnings-as-errors=-* --
 
-valgrind: demo test
-	valgrind --tool=memcheck $(VALGRIND_FLAGS) ./demo 2>&1 | { egrep "lost| at " || true; }
-	valgrind --tool=memcheck $(VALGRIND_FLAGS) ./test 2>&1 | { egrep "lost| at " || true; }
+valgrind: catan
+	# valgrind --tool=memcheck $(VALGRIND_FLAGS) ./demo 2>&1 | { egrep "lost| at " || true; }
+	# valgrind --tool=memcheck $(VALGRIND_FLAGS) ./test 2>&1 | { egrep "lost| at " || true; }
 	valgrind --tool=memcheck $(VALGRIND_FLAGS) ./catan 2>&1 | { egrep "lost| at " || true; }
 
 
