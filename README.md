@@ -32,3 +32,91 @@
 
 . 
 התוכנית רצה על הטרמינל כל המשחק כדי להריץ לכתוב make והמשחק ירוץ
+
+
+
+### Catan
+ static Catan &getInstance(const std::vector<Player *> &players);
+        Board &getBoard();
+        Player *getCurrentPlayer() const;
+        void start();
+        void playTurn();
+        void nextPlayer();
+        bool checkVictory();
+        bool checkBuild(); // check if the player build something so he cant trade
+        void printWinner();
+        void giveResourceStart();
+ void setIfBuild(bool status);
+        void chooseStartingPlayer();
+        bool buildFromUser(string WhatBuild); // take places and numbers from user and build with them
+        // if player got 7 in dice we need to check all the player cards
+        // to see if all got less then 7 card if not reduce the amount of the card
+        void gotSevenInDice();
+        void UseDevelopmentOfCurrentPlayer(const string &useDevelopment); // play card player
+### Board
+       int hasRobber() const;
+        int findRoad(int n1, int n2) const;
+        PlacementError ValidateSettlement(int node, const Player &player, int countTurn) const;
+        PlacementError ValidateCity(int node, const Player &player) const;
+        PlacementError ValidateRoad(int node1, int node2, const Player &player) const;
+        bool placeSettlement(int node, Player &player, int countTurn);
+        bool placeCity(int node, Player &player);
+        bool placeRoad(int node1, int node2, Player &player);
+        void setRobber(int hasRobber); //set robber in tile
+        // bool placeSettlementFirstTime(int node, Player &player);
+        // bool placeRoadFirstTime(int node1, int node2, Player &player);
+        void printBoard() const;
+        // void moveRobber(int tileNumber);
+        void giveResourceByDice(int dice, int moverobber);
+        std::vector<std::shared_ptr<Tile>> findTiles(const std::vector<std::string> &places, const std::vector<int> &placesNum); // find the tiles we looking for
+        int findNode(std::vector<std::shared_ptr<Tile>> t);    //find nodes using tiles                                                                  // find the node we are looking for
+        int findOtherNodeOfRoad(int Node,int numberofturn, Player &player);       
+### Player
+       void reduceVictoryPoints(int num);
+        void addDevelopment(const string &getDevelopment);
+        bool isInputsValid(const vector<string> &places, const vector<int> &placesNum);
+        string getName() const;
+        int getAge() const;
+ 
+        int getVictoryPoints() const;
+        void addVictoryPoints();
+
+        void addResource(int count, const std::string &getResource);
+        void removeResource(int count, const string &removeResource); 
+        int getResourceCount(const std::string &getResource) const;
+        int countResources();
+
+        void useDevelopment(const string &removeDevelopment); // need to change this so it will be done in the catan and here only reduce
+        int getDevelopmentCardCount(const string &getDevelopment) const;
+        void buyDevelopmentCard();
+        bool hasDevelopment() const;
+        void printDevelopment() const;//list of the development of the player
+
+        bool placeSettelemnt(const vector<string> &places, const vector<int> &placesNum, Board &board);
+        bool placeCity(const vector<string> &places, const vector<int> &placesNum, Board &board);
+        bool placeRoad(const vector<string> &places, const vector<int> &placesNum, Board &board);
+        int getNumberOfSettlement() const;
+        int getNumberOfCity() const;
+        int getNumberOfRoads() const;
+
+        int getSettlementLimit() const;
+        int getCityLimit() const;
+        int getRoadsLimit() const;
+
+        int rollDice(Board &board);
+        void endTurn();
+        void startTurn();
+        void hasBuild(bool b);
+        bool getHasBuild() const;
+
+        void trade(Player &other, const string &giveResource, const string &getResource, int giveAmount, int getAmount);
+        void tradeMonopoly(Player &other, const string &giveResource, const string &getResource, int giveAmount, int getAmount);
+
+        void setKnightCard(bool b); // to add do true else false
+        bool getKnightCard();       // if he has knight card
+        void setRoadCard(bool b);   // to add do true else false
+        bool getRoadCard();         // if he has road card
+
+        void printPoints() const;
+        void printStatsOfPlayer() const; // print resource and dev own by player
+        bool operator==(const Player &p) const;
