@@ -1,3 +1,4 @@
+//danielsamson10@gmail.com
 #include "hexagon.hpp"
 #include "tile.hpp"
 namespace ariel
@@ -10,31 +11,6 @@ namespace ariel
         this->hasCity = false;
         this->owner = NULL;
     }
-    // Node::Node(int number, std::shared_ptr<Tile> tile)
-    // {
-    //     std::vector<std::shared_ptr<Tile>> t;
-    //     t.emplace_back(tile);
-    //     Node(number, t);
-    // }
-    // Node::Node(int number, std::shared_ptr<Tile> tile1, std::shared_ptr<Tile> tile2)
-    // {
-    //     std::vector<std::shared_ptr<Tile>> t;
-    //     t.emplace_back(tile1);
-
-    //     t.emplace_back(tile1);
-
-    //     Node(number, t);
-    // }
-    // Node::Node(int id, std::shared_ptr<Tile> tile1, std::shared_ptr<Tile> tile2, std::shared_ptr<Tile> tile3)
-    // {
-    //     std::vector<std::shared_ptr<Tile>> t;
-    //     t.emplace_back(tile1);
-
-    //     t.emplace_back(tile2);
-
-    //     t.emplace_back(tile3);
-    //     Node(id, t);
-    // }
     std::vector<std::shared_ptr<Tile>> Node::getTile() const
     {
         return this->tiles;
@@ -59,10 +35,6 @@ namespace ariel
     {
         return this->connectNode;
     }
-    // vector<Node> Node::getConnectNodeByRoads() const
-    // {
-    //     return this->connectNodeByRoads;
-    // }
     void Node::setHasSettlement(bool has, Player &p) // if has city cant put also settlement
     {
         if (!getHasCity())
@@ -86,27 +58,6 @@ namespace ariel
     {
         this->connectNode = node;
     }
-    // void Node::setConnectNode(Node node)
-    // {
-    //     vector<Node> n;
-    //     n.push_back(node);
-    //     setConnectNode(n);
-    // }
-    // void Node::setConnectNode(Node node1, Node node2)
-    // {
-    //     vector<Node> n;
-    //     n.push_back(node1);
-    //     n.push_back(node2);
-    //     setConnectNode(n);
-    // }
-    // void Node::setConnectNode(Node node1, Node node2, Node node3)
-    // {
-    //     vector<Node> n;
-    //     n.push_back(node1);
-    //     n.push_back(node2);
-    //     n.push_back(node3);
-    //     setConnectNode(n);
-    // }
     Road::Road(Node &n1, Node &n2, Player &p)
     {
         this->n1 = &n1;

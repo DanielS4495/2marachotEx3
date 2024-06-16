@@ -1,6 +1,5 @@
 
-#include <stdexcept>
-
+//danielsamson10@gmail.com
 #include "board.hpp"
 #include "player.hpp"
 #include "tile.cpp"
@@ -148,22 +147,6 @@ namespace ariel
         nodes[id++].setConnectNode(vector<Node>{nodes[51], nodes[53]});
         nodes[id++].setConnectNode(vector<Node>{nodes[45], nodes[52]});
     }
-    Board::~Board() // need to delete the board and all the tile
-    {
-        // for (Tile *tile : tiles)
-        // {
-        //     delete tile;
-        // }
-        // tiles.clear();
-    }
-    // std::shared_ptr<Board> Board::getInstance()
-    // {
-    //     if (!instance)
-    //     {
-    //         instance = std::shared_ptr<Board>(new Board());
-    //     }
-    //     return instance;
-    // }
     std::vector<std::shared_ptr<Tile>> Board::findTiles(const std::vector<std::string> &places, const std::vector<int> &placesNum)
     {
         std::vector<std::shared_ptr<Tile>> matchingTiles; // Stores found tiles
@@ -177,7 +160,6 @@ namespace ariel
 
             for (size_t i = 0; i < places.size(); ++i)
             {
-
                 for (std::shared_ptr<Tile> tile : tiles)
                 {
                     // Check if place and number match
@@ -189,6 +171,7 @@ namespace ariel
                     }
                 }
             }
+            if(matchingTiles.empty()) throw std::invalid_argument("Didnt find Tiles");
         }
         catch (const std::exception &e)
         {
@@ -200,66 +183,10 @@ namespace ariel
     {
         return this->robberPresent;
     }
-    void Board::setRobber(int hasRobber)
+    void Board::setRobber(int hasRobber) //doesnt check
     {
         this->robberPresent = hasRobber;
     }
-    // int Board::findNode(std::vector<std::shared_ptr<Tile>> t)
-    // {
-    //     // if he has only one then there is two node that can be found!
-    //     // so it will choose the one with no placement at all if there is both then he will take the second one
-    //     if (t.size() == 1)
-    //     {
-    //         int x = -1;
-    //         vector<int> tile = t[(size_t)0]->getNode();
-    //         for (int i : tile)
-    //         {
-    //             if (vector<Node>{nodes[(size_t)i].getTile().size() == 1)
-    //             {
-    //                 if (!nodes[(size_t)i].getHasCity() || !nodes[(size_t)i].getHasSettlement())
-    //                     return i;
-    //                 else
-    //                     x = i;
-    //             }
-    //         }
-    //         if (x != -1)
-    //             return x;
-    //     }
-    //     vector<int> firstNode = t[(size_t)0]->getNode();
-    //     vector<int> secendNode = t[(size_t)1]->getNode();
-    //     if (t.size() == 3)
-    //     {
-    //         vector<int> thirdNode = t[(size_t)2]->getNode();
-    //         for (int i : firstNode) // iterate throw the node of the first tile
-    //         {
-    //             for (int j = 1; j <= firstNode.size(); j++)
-    //             {
-    //                 if (i == secendNode[(size_t)j]) // check if first and secend node are the same
-    //                     for (int k : thirdNode)     // iterate throw the node of the third tile
-    //                     {
-    //                         if (i == k)
-    //                             return i;
-    //                     }
-    //                 if (i == thirdNode[(size_t)j]) // check if first and third node are the same
-    //                     for (int k : secendNode)   // iterate throw the node of the secend tile
-    //                     {
-    //                         if (i == k)
-    //                             return i;
-    //                     }
-    //             }
-    //         }
-    //     }
-    //     for (int i : firstNode)
-    //     {
-    //         for (int j : secendNode)
-    //         {
-    //             if (i == j)
-    //                 if (vector<Node>{nodes[(size_t)i].getTile().size() == 2) // check if has two tile connected and not three
-    //                     return i;
-    //         }
-    //     }
-    //     return -1;
-    // }
     int Board::findNode(std::vector<std::shared_ptr<Tile>> t)
     {
         if (t.empty())
@@ -511,8 +438,7 @@ namespace ariel
             }
         else
         {
-            // need to take half of the card from players that have more than 7 card
-            if (moverobber > 0 && moverobber < 20)
+            if (moverobber > -1 && moverobber < 19)
                 setRobber(moverobber);
         }
     }

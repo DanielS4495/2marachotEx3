@@ -1,11 +1,13 @@
+//danielsamson10@gmail.com
 #include "tile.hpp"
 #include <memory>
 #include <string>
 namespace ariel
 {
-   
+
     class ForestTile : public Tile
     {
+    private:
         std::string resource;
         int number;
         std::vector<int> node; // connected node number
@@ -20,6 +22,7 @@ namespace ariel
 
     class HillsTile : public Tile
     {
+    private:
         std::string resource;
         int number;
         std::vector<int> node; // connected node number
@@ -34,6 +37,7 @@ namespace ariel
 
     class PastureTile : public Tile
     {
+    private:
         std::string resource;
         int number;
         std::vector<int> node; // connected node number
@@ -48,6 +52,7 @@ namespace ariel
 
     class AgriculturalTile : public Tile
     {
+    private:
         std::string resource;
         int number;
         std::vector<int> node; // connected node number
@@ -62,6 +67,7 @@ namespace ariel
 
     class MountainsTile : public Tile
     {
+    private:
         std::string resource;
         int number;
         std::vector<int> node; // connected node number
@@ -75,6 +81,7 @@ namespace ariel
     };
     class DesertTile : public Tile
     {
+    private:
         std::string resource;
         int number;
         std::vector<int> node; // connected node number

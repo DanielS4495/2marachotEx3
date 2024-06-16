@@ -1,5 +1,5 @@
+//danielsamson10@gmail.com
 #pragma once
-
 #include "resource.hpp"
 #include "hexagon.hpp"
 #include <memory>
@@ -16,6 +16,5 @@ namespace ariel
         virtual std::string getResource() const = 0;
         virtual int getNumber() const = 0;
         virtual vector<int> getNode() const = 0;
-        // virtual std::vector<int> getNodesId(); // connected node number
     };
 }

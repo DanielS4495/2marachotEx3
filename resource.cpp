@@ -1,3 +1,4 @@
+//danielsamson10@gmail.com
 #include "resource.hpp"
 #include <stdexcept>
 
@@ -30,22 +31,4 @@ namespace ariel
         {"WHEAT", ResourceType::WHEAT},
         {"IRON", ResourceType::IRON}};
 
-    // std::shared_ptr<Resource> createResource(ResourceType type)
-    // {
-    //     switch (type)
-    //     {
-    //     case WOOD:
-    //         return std::make_shared<Wood>();//std::static_pointer_cast<Resource>(std::make_shared<Wood>());
-    //     case BRICK:
-    //         return std::make_shared<Brick>();//std::static_pointer_cast<Resource>(std::make_shared<Brick>());
-    //     case SHEEP:
-    //         return std::make_shared<Sheep>();//std::static_pointer_cast<Resource>(std::make_shared<Sheep>());
-    //     case WHEAT:
-    //         return std::make_shared<Wheat>();//std::static_pointer_cast<Resource>(std::make_shared<Wheat>());
-    //     case IRON:
-    //         return std::make_shared<Iron>();//std::static_pointer_cast<Resource>(std::make_shared<Iron>());
-    //     default:
-    //         throw std::invalid_argument("Invalid Resource type");
-    //     }
-    // }
 }

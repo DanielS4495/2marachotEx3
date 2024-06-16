@@ -1,13 +1,12 @@
+//danielsamson10@gmail.com
 #pragma once
-
+#include <stdexcept>
 #include <vector>
 #include <memory>
 #include <iostream>
 #include <unordered_map>
 #include "tile.hpp"
-// #include "piece.hpp"
 #include "hexagon.hpp"
-// #include "player.hpp"
 
 namespace ariel
 {
@@ -39,7 +38,7 @@ namespace ariel
         std::vector<Node> nodes;
         std::vector<Road> roads;
         int hasRobber() const;
-        void setRobber(int hasRobber);
+        
         int findRoad(int n1, int n2) const;
         PlacementError ValidateSettlement(int node, const Player &player, int countTurn) const;
         PlacementError ValidateCity(int node, const Player &player) const;
@@ -49,11 +48,12 @@ namespace ariel
         Board(const Board &) = delete;               // Disable copy constructor
         Board &operator=(const Board &) = delete;    // Disable assignment operator
         // static std::shared_ptr<Board> getInstance(); // give access as singelton
-        ~Board();
+        // ~Board();
         Board();
         bool placeSettlement(int node, Player &player, int countTurn);
         bool placeCity(int node, Player &player);
         bool placeRoad(int node1, int node2, Player &player);
+        void setRobber(int hasRobber); //set robber in tile
         // bool placeSettlementFirstTime(int node, Player &player);
         // bool placeRoadFirstTime(int node1, int node2, Player &player);
         void printBoard() const;
